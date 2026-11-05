@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Baton — Round 1 Plan</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 15mm 14mm; }
+  @page :first { margin: 0; }
+  :root{
+    --ink:#0E1A2B; --ink2:#334155; --mute:#64748B; --line:#E2E8F0; --bg:#F8FAFC;
+    --amber:#F59E0B; --amberd:#B45309; --amberl:#FEF3C7;
+    --ver:#15803D; --verl:#DCFCE7; --inf:#1D4ED8; --infl:#DBEAFE; --con:#C2410C; --conl:#FFEDD5;
+    --gap:#B91C1C; --gapl:#FEE2E2; --att:#6D28D9; --attl:#EDE9FE; --sea:#475569; --seal:#E2E8F0;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  body{font-family:Inter, "DejaVu Sans", sans-serif; color:var(--ink); font-size:8.9pt; line-height:1.42; margin:0}
+  h1,h2,h3,h4{font-family:"Inter Display",Inter,sans-serif; margin:0; letter-spacing:-0.01em}
+  h2{font-size:16.5pt; font-weight:800; margin:0 0 1.5mm}
+  h3{font-size:10.5pt; font-weight:700; margin:3.5mm 0 1.2mm}
+  h4{font-size:10pt; font-weight:700; margin:0 0 1mm}
+  p{margin:0 0 2.2mm}
+  ul{margin:0 0 2.5mm; padding-left:4.5mm} li{margin-bottom:0.8mm}
+  code,.mono{font-family:"JetBrains Mono",monospace; font-size:8.3pt}
+  .section{break-before:page}
+  .kicker{font-size:8pt; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--amberd); margin-bottom:1mm}
+  .lead{font-size:9.8pt; color:var(--ink2); line-height:1.45; margin-bottom:3mm}
+  .rule{height:3px; width:22mm; background:var(--amber); border-radius:2px; margin:0 0 3mm}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:4mm}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:3.5mm}
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:3mm}
+  .card{border:1px solid var(--line); border-radius:3mm; padding:2.8mm 3.4mm; background:#fff; break-inside:avoid}
+  .card.soft{background:var(--bg)}
+  .card.dark{background:var(--ink); color:#E2E8F0; border-color:var(--ink)}
+  .card.dark h4{color:#fff}
+  .card.amber{background:var(--amberl); border-color:#FCD34D}
+  .small{font-size:8pt; color:var(--ink2)}
+  .tiny{font-size:7.4pt; color:var(--mute)}
+  .stat{font-family:"Inter Display"; font-size:21pt; font-weight:800; color:var(--amberd); line-height:1}
+  table{width:100%; border-collapse:collapse; font-size:7.9pt; break-inside:auto}
+  th{background:var(--ink); color:#fff; text-align:left; padding:1.4mm 2mm; font-weight:600}
+  td{border-bottom:1px solid var(--line); padding:1.2mm 2mm; vertical-align:top}
+  tr{break-inside:avoid}
+  tr:nth-child(even) td{background:#FBFCFE}
+  .tag{display:inline-block; font-size:7.2pt; font-weight:700; padding:.3mm 1.8mm; border-radius:10mm; letter-spacing:.02em; white-space:nowrap}
+  .t-ver{background:var(--verl); color:var(--ver)} .t-inf{background:var(--infl); color:var(--inf)}
+  .t-con{background:var(--conl); color:var(--con)} .t-gap{background:var(--gapl); color:var(--gap)}
+  .t-att{background:var(--attl); color:var(--att)} .t-sea{background:var(--seal); color:var(--sea)}
+  .t-amb{background:var(--amberl); color:var(--amberd)}
+  .yes{color:var(--ver); font-weight:700} .no{color:#CBD5E1; font-weight:700} .part{color:var(--amberd); font-weight:700}
+  .cite{font-family:"JetBrains Mono"; font-size:7pt; background:#F1F5F9; color:#334155; border:1px solid #CBD5E1; border-radius:1mm; padding:0 1mm; white-space:nowrap}
+  .num{display:inline-flex; align-items:center; justify-content:center; width:6mm; height:6mm; border-radius:50%; background:var(--amber); color:var(--ink); font-weight:800; font-size:8.5pt; flex:none}
+  .fill{background:#FEF9C3; outline:1px dashed #CA8A04; padding:0 1mm; border-radius:1mm}
+  .quote{border-left:3px solid var(--amber); padding:1mm 0 1mm 4mm; font-size:10.5pt; color:var(--ink2); font-style:italic; margin:3mm 0}
+
+  /* ---------- cover ---------- */
+  .cover{height:297mm; width:210mm; background:var(--ink); color:#fff; position:relative; overflow:hidden; padding:22mm 20mm}
+  .cover .glow{position:absolute; right:-60mm; top:-40mm; width:190mm; height:190mm; border-radius:50%;
+     background:radial-gradient(circle, rgba(245,158,11,.35) 0%, rgba(245,158,11,0) 65%)}
+  .cover .brand{display:flex; align-items:center; gap:4mm}
+  .cover .logo{width:13mm; height:13mm}
+  .cover .event{font-size:9pt; letter-spacing:.18em; text-transform:uppercase; color:#FCD34D; font-weight:700}
+  .cover h1{font-size:64pt; font-weight:900; letter-spacing:-0.03em; margin-top:40mm; line-height:.95}
+  .cover .tagline{font-size:20pt; font-weight:300; color:#CBD5E1; margin-top:5mm; line-height:1.25; max-width:150mm}
+  .cover .tagline b{color:#fff; font-weight:700}
+  .cover .pillars{position:absolute; left:20mm; right:20mm; bottom:52mm; display:grid; grid-template-columns:repeat(3,1fr); gap:4mm}
+  .cover .pill{border:1px solid rgba(255,255,255,.18); border-radius:3mm; padding:4mm; background:rgba(255,255,255,.04)}
+  .cover .pill b{display:block; color:#FCD34D; font-size:10pt; margin-bottom:1mm}
+  .cover .pill span{font-size:8.6pt; color:#CBD5E1; line-height:1.4}
+  .cover .meta{position:absolute; left:20mm; right:20mm; bottom:20mm; display:flex; justify-content:space-between; font-size:9pt; color:#94A3B8; border-top:1px solid rgba(255,255,255,.15); padding-top:4mm}
+  .cover .meta b{color:#fff}
+
+  /* ---------- flow ---------- */
+  .flow{display:grid; grid-template-columns:repeat(7,1fr); gap:1.6mm; margin:3mm 0}
+  .step{background:var(--bg); border:1px solid var(--line); border-radius:2.5mm; padding:2.5mm 2mm; position:relative; break-inside:avoid}
+  .step .n{font-size:7pt; font-weight:800; color:var(--amberd); letter-spacing:.1em}
+  .step b{display:block; font-size:9.4pt; margin:.5mm 0 .8mm}
+  .step span{font-size:7.4pt; color:var(--ink2); line-height:1.35; display:block}
+  .step.req{border-top:3px solid var(--ink)}
+  .step.new{border-top:3px solid var(--amber); background:#FFFBEB}
+
+  /* ---------- mock UI ---------- */
+  .mock{border:1px solid #CBD5E1; border-radius:3mm; overflow:hidden; background:#fff; break-inside:avoid; box-shadow:0 1mm 4mm rgba(15,23,42,.08)}
+  .mock .bar{background:#0E1A2B; color:#fff; font-size:8pt; padding:1.8mm 3mm; display:flex; justify-content:space-between; align-items:center}
+  .mock .bar .dots i{display:inline-block; width:2mm; height:2mm; border-radius:50%; background:#475569; margin-right:1mm}
+  .mock .body{padding:3mm}
+  .claim{border:1px solid var(--line); border-left-width:3px; border-radius:2mm; padding:2mm 2.6mm; margin-bottom:2mm; font-size:8.3pt; break-inside:avoid}
+  .claim .h{display:flex; gap:1.5mm; align-items:center; margin-bottom:.8mm; flex-wrap:wrap}
+  .claim .type{font-size:6.8pt; font-weight:800; letter-spacing:.08em; color:var(--mute); text-transform:uppercase}
+  .claim .acts{margin-top:1.2mm; display:flex; gap:1.5mm}
+  .claim .acts span{font-size:6.8pt; border:1px solid #CBD5E1; border-radius:1mm; padding:0 1.5mm; color:#334155}
+  .claim.ver{border-left-color:var(--ver)} .claim.con{border-left-color:var(--con)} .claim.gap{border-left-color:var(--gap)}
+  .claim.att{border-left-color:var(--att)} .claim.sea{border-left-color:var(--sea); background:repeating-linear-gradient(45deg,#F8FAFC,#F8FAFC 2mm,#F1F5F9 2mm,#F1F5F9 4mm)}
+  .claim.inf{border-left-color:var(--inf)}
+
+  /* ---------- architecture ---------- */
+  .arch{display:grid; grid-template-columns:30mm 1fr; gap:2mm; font-size:8pt}
+  .arch .lab{background:var(--ink); color:#fff; border-radius:2mm; padding:2mm; font-weight:700; display:flex; align-items:center; font-size:7.8pt}
+  .arch .row{display:flex; gap:2mm}
+  .arch .box{flex:1; border:1px solid var(--line); background:var(--bg); border-radius:2mm; padding:1.8mm 2mm; line-height:1.3}
+  .arch .box b{display:block; font-size:8.2pt}
+  .arch .box.hl{background:#FFFBEB; border-color:#FCD34D}
+  .arch .box.sec{background:#FEF2F2; border-color:#FECACA}
+  .arrow{text-align:center; color:var(--mute); font-size:8pt; grid-column:2; line-height:1}
+
+  /* ---------- gantt ---------- */
+  .gantt{display:grid; grid-template-columns:44mm repeat(12,1fr); font-size:7.6pt; gap:.8mm 0; align-items:center}
+  .gantt .hd{font-weight:700; color:var(--mute); text-align:center; font-size:7pt}
+  .gantt .lbl{padding-right:2mm; grid-column:1; white-space:nowrap}
+  .gantt .b{height:4.2mm; border-radius:1.2mm}
+  .r1{background:#94A3B8}.r2{background:var(--amber)}.r3{background:var(--ink)}
+
+  .toc{columns:2; column-gap:8mm; font-size:9pt}
+  .toc div{display:flex; gap:2mm; margin-bottom:1.6mm; break-inside:avoid}
+  .toc .k{color:var(--amberd); font-weight:800; width:6mm}
+</style>
+</head>
+<body>
+
+<!-- ======================= COVER ======================= -->
+<div class="cover">
+  <div class="glow"></div>
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="10" fill="#F59E0B"/><path d="M12 34 L30 16" stroke="#0E1A2B" stroke-width="6" stroke-linecap="round"/><circle cx="34" cy="14" r="5" fill="#0E1A2B"/><circle cx="12" cy="34" r="3" fill="#0E1A2B" opacity=".45"/></svg>
+    <div class="event">Coders in Pune · Knowledge Handover Challenge · Round 1: The Plan</div>
+  </div>
+  <h1>Baton</h1>
+  <div class="tagline">Hand over the work, <b>not just the files.</b><br>Every claim has a receipt. Every gap gets asked. Every reader sees only what they're allowed to see.</div>
+
+  <div class="pillars">
+    <div class="pill"><b>Evidence Ledger</b><span>The handover is built from small claims, and each one links to the exact sentence it came from. A second model checks every claim against its source before it can be marked <i>Verified</i>.</span></div>
+    <div class="pill"><b>Gap Interview</b><span>Baton finds what the sources <i>can't</i> explain and only the leaver knows. It then asks them a short, ranked list of questions before their last day.</span></div>
+    <div class="pill"><b>Sealed Claims</b><span>Each reader's handover is built from only the sources that reader can open. Restricted items show up as a locked placeholder, so the reader knows they exist without seeing what they say.</span></div>
+  </div>
+  <div class="meta">
+    <div>Team <b class="fill">[Team Name]</b> · Team ID <b class="fill">[ID]</b></div>
+    <div>Submitted <b>November 2026</b></div>
+  </div>
+</div>
+
+<!-- ======================= EXEC SUMMARY ======================= -->
+<div class="section">
+  <div class="kicker">At a glance</div>
+  <h2>Executive summary</h2>
+  <div class="rule"></div>
+  <p class="lead">When someone leaves a project, the documents usually stay behind. What leaves with them is the reasoning: why a decision was made, what is half-finished, who to call, and which problem keeps coming back. Baton rebuilds that reasoning from the project's authorised sources. It shows exactly where each statement came from, says clearly what it doesn't know, and turns the result into a continuation plan that a responsible person reviews and approves before the newcomer sees it.</p>
+
+  <div class="grid3" style="margin-bottom:4mm">
+    <div class="card soft"><h4>The insight</h4><p class="small">The usual answer is an AI summary. A summary can only restate what's already written down, and it sounds just as sure of itself when it's guessing. The knowledge that's actually at risk is the part that <b>was never written down</b>. So Baton is built around finding gaps first: it works out what the sources can't support, and spends the leaver's last days filling those gaps.</p></div>
+    <div class="card soft"><h4>The product</h4><p class="small">There are seven steps: <b>Connect → Reconstruct → Verify → Ask → Review → Handover → Continue</b>. The result is a handover tailored to each reader's role. It contains typed, cited claims, a timeline of decisions, a map of who owns what, a list of risks and dependencies, and a Day 1 / Week 1 / Month 1 plan that the incoming person signs off on.</p></div>
+    <div class="card soft"><h4>Why it's feasible</h4><p class="small">The MVP needs just two kinds of source: the GitHub API, plus uploaded files (Slack/Discord exports, documents, meeting transcripts, task-board CSVs). For the demo we'll use a synthetic project with a known answer key, so we can measure accuracy and leakage instead of just claiming them.</p></div>
+  </div>
+
+  <div class="grid4" style="margin-bottom:5mm">
+    <div class="card"><div class="stat">100%</div><p class="tiny" style="margin-top:1.5mm">of claims in a shared handover cite at least one source, or are clearly labelled <i>Unsupported / Gap</i>. Nothing is presented as fact without a source.</p></div>
+    <div class="card"><div class="stat">0</div><p class="tiny" style="margin-top:1.5mm">confidential items leaked to unauthorised roles. Every build runs an automated leakage test that must pass.</p></div>
+    <div class="card"><div class="stat">≥ 90%</div><p class="tiny" style="margin-top:1.5mm">target precision on our benchmark: a claim only counts if its cited source actually supports it, as judged against ground truth.</p></div>
+    <div class="card"><div class="stat">−50%</div><p class="tiny" style="margin-top:1.5mm">target cut in the time a newcomer needs to answer 10 "pick up the project" questions correctly, measured in a usability test.</p></div>
+  </div>
+
+  <h3>How this document maps to the submission checklist</h3>
+  <div class="toc">
+    <div><span class="k">1</span>Understanding of the problem: §1</div>
+    <div><span class="k">2</span>Users affected: §2</div>
+    <div><span class="k">3</span>Proposed solution: §3</div>
+    <div><span class="k">4</span>Complete product workflow: §4 (with worked example)</div>
+    <div><span class="k">5</span>Main features: §5</div>
+    <div><span class="k">6</span>Technology stack and architecture: §6</div>
+    <div><span class="k">7</span>Team responsibilities: §7</div>
+    <div><span class="k">8</span>Development plan across all three rounds: §8</div>
+    <div><span class="k">9</span>Expected impact: §9</div>
+    <div><span class="k">10</span>Future scope: §10</div>
+    <div><span class="k">11</span>Team and participant details: §11</div>
+    <div><span class="k">+</span>Research plan, references, AI-use disclosure: Appendix</div>
+  </div>
+
+  <div class="card amber" style="margin-top:4mm">
+    <h4>How we line up with the judging criteria</h4>
+    <p class="small" style="margin:0"><b>Understanding (25):</b> we pin down what is lost and why documentation fails (§1). <b>Solution (25):</b> each workflow step answers a specific failure (§3–4). <b>Technical (20):</b> permissions are enforced at three separate layers, and every claim is tied to an exact span of its source (§6). <b>Originality (15):</b> Gap Interview, Sealed Claims and a Sole-Knower Index, which together go well beyond summarising (§3). <b>Feasibility (15):</b> the scope is a narrow MVP that we can demo and measure, and anything beyond it is held for Round 3 (§5, §8).</p>
+  </div>
+</div>
+
+<!-- ======================= 1. PROBLEM ======================= -->
+<div class="section">
+  <div class="kicker">§1 · Understanding of the problem</div>
+  <h2>Projects don't lose documents. They lose the reasoning.</h2>
+  <div class="rule"></div>
+  <p class="lead">A departing member usually leaves behind a repository, a drive folder and a long chat history. What the incoming person actually needs is spread across all of them and rarely written down: why things are the way they are, what's half-done, and what will go wrong next.</p>
+
+  <div class="grid3" style="margin-bottom:4mm">
+    <div class="card"><div class="stat">42%</div><p class="small" style="margin-top:1.5mm">of institutional knowledge is unique to the individual employee. It was learned doing the role and isn't shared with co-workers.<br><span class="tiny">Panopto, Workplace Knowledge &amp; Productivity Report (survey of 1,000+ US workers, 2018) [R1]</span></p></div>
+    <div class="card"><div class="stat">5.3 h</div><p class="small" style="margin-top:1.5mm">per week is how long knowledge workers spend waiting for information from colleagues, or recreating information that already exists.<br><span class="tiny">Panopto, same study [R1]</span></p></div>
+    <div class="card"><div class="stat">0.5–2×</div><p class="small" style="margin-top:1.5mm">a person's annual salary is what it costs to replace one employee, and Gallup calls that a conservative estimate. Lost knowledge is a large hidden part of that cost.<br><span class="tiny">Gallup, "This Fixable Problem Costs U.S. Businesses $1 Trillion" [R2]</span></p></div>
+  </div>
+
+  <h3>What exactly is lost</h3>
+  <table>
+    <tr><th style="width:24%">Lost knowledge</th><th style="width:38%">Example (student tech-club app)</th><th>Where it hides today</th></tr>
+    <tr><td><b>Decision rationale</b></td><td>"We dropped Firebase because the free tier broke during the fest registration spike."</td><td>A 2 a.m. Slack thread, never put in the README</td></tr>
+    <tr><td><b>Unfinished work</b></td><td>Half-merged payment PR; a migration that ran on staging only</td><td>Open PRs, local branches, the leaver's memory</td></tr>
+    <tr><td><b>Ownership &amp; contacts</b></td><td>"Ask Meera at the sponsor for the API quota; she replies only on email."</td><td>The leaver's personal relationships</td></tr>
+    <tr><td><b>Dependencies</b></td><td>The college SSO certificate expires in March and breaks login</td><td>One calendar reminder on one person's phone</td></tr>
+    <tr><td><b>Recurring problems</b></td><td>Deploys fail on Fridays because the free CI runner hits its quota</td><td>Repeated across 6 issues that nobody has linked together</td></tr>
+    <tr><td><b>Reversed decisions</b></td><td>The design doc says "MongoDB"; the code has used Postgres since April</td><td>Contradicting sources, with no record of which is current</td></tr>
+  </table>
+
+  <h3>Why existing documentation and tools fail</h3>
+  <div class="grid2">
+    <div>
+      <ul class="small">
+        <li><b>Docs capture <i>what</i>, rarely <i>why</i>.</b> Reasoning happens in conversation, and conversation is the part nobody curates.</li>
+        <li><b>Handover notes get written at the worst moment:</b> in the last week, by someone busy and already checked out. They suffer from the <i>curse of knowledge</i>, which means the writer can't see what a newcomer doesn't know.</li>
+        <li><b>Docs go stale quietly.</b> A wiki page written in January says nothing about the April reversal, and doesn't warn you that it's out of date.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="small">
+        <li><b>Generic AI summarisers sound equally sure when they're right and when they're guessing.</b> They tidy up contradictions instead of flagging them, and they can only summarise what was written. They never ask what's missing.</li>
+        <li><b>Search tools answer the questions you know to ask.</b> A newcomer's biggest risks are the questions they don't know to ask yet.</li>
+        <li><b>Permissions often stop at retrieval.</b> A summary can mix restricted facts (budget, HR, credentials) into text that goes to everyone.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card dark" style="margin-top:3mm">
+    <h4>The part of the problem we will solve</h4>
+    <p style="margin:0; font-size:9pt">We focus on <b>planned and sudden departures from small and mid-sized project teams</b> whose work lives in a code repository plus chat, documents, meeting notes and a task board. These are student tech clubs, hackathon and open-source teams, research groups and early-stage software teams. Our goal is to <b>shorten the time it takes the incoming person to work safely and independently</b>, without ever showing them anything they aren't authorised to see. We are deliberately <i>not</i> building a general enterprise search engine, or a tool that judges the leaver's performance.</p>
+  </div>
+</div>
+
+<!-- ======================= 2. USERS ======================= -->
+<div class="section">
+  <div class="kicker">§2 · Users affected</div>
+  <h2>Four people sit around every handover</h2>
+  <div class="rule"></div>
+  <p class="lead">Our first market is <b>college technical clubs and student project teams</b>. Their leadership turns over almost completely every year at graduation, they run on free tools (GitHub, Slack/Discord, Google Docs, Trello/Notion), and they have no knowledge-management staff at all. The same workflow carries over without changes to volunteer NGOs, research labs and small software teams.</p>
+
+  <div class="grid2" style="margin-bottom:4mm">
+    <div class="card"><span class="tag t-amb">Departing member</span><h4 style="margin-top:1.5mm">Priya, outgoing tech lead, graduating in 3 weeks</h4><p class="small"><b>Pain:</b> she has a placement to start and exams to sit. Writing a 20-page handover feels pointless, and she doesn't know what her successor will need.<br><b>Baton gives her:</b> a draft she only has to <i>correct</i>, plus a <b>20-minute Gap Interview</b> in place of a blank page.</p></div>
+    <div class="card"><span class="tag t-ver">Incoming member</span><h4 style="margin-top:1.5mm">Arjun, second-year, new tech lead</h4><p class="small"><b>Pain:</b> he's inheriting 400 commits, 9 channels and 30 open issues, and he's afraid to touch production.<br><b>Baton gives him:</b> a cited handover built for his role, a Day 1 / Week 1 / Month 1 plan, a list of people to talk to, and a clear list of what's still unknown.</p></div>
+    <div class="card"><span class="tag t-inf">Reviewer / approver</span><h4 style="margin-top:1.5mm">Dr. Kulkarni, faculty coordinator (or an engineering manager)</h4><p class="small"><b>Pain:</b> the club is accountable for sponsor money and student data, and nobody can see what knowledge is at risk.<br><b>Baton gives them:</b> a review screen where they accept, edit or reject each claim, a <b>Handover Readiness Score</b>, and an audit trail.</p></div>
+    <div class="card"><span class="tag t-sea">Workspace admin</span><h4 style="margin-top:1.5mm">Club secretary or IT owner</h4><p class="small"><b>Pain:</b> they want to use AI, but they're worried about leaking secrets, personal data or finance details.<br><b>Baton gives them:</b> scoped source connections, sensitivity labels, role-based access policies, automatic redaction and a record of every access.</p></div>
+  </div>
+
+  <h3>Departure and onboarding scenarios we design for</h3>
+  <table>
+    <tr><th style="width:22%">Scenario</th><th style="width:42%">What is different</th><th>How Baton adapts</th></tr>
+    <tr><td><b>Planned exit</b><br><span class="tiny">graduation, resignation</span></td><td>The leaver is available for 1–4 weeks, but busy</td><td>Full workflow, with a time-boxed Gap Interview ranked by risk</td></tr>
+    <tr><td><b>Sudden exit</b><br><span class="tiny">illness, emergency, drop-out</span></td><td>There's no interview, so everything rests on the sources</td><td>Gaps are routed to the next-best person ("who else touched this?"), and the uncertainty labels become more prominent</td></tr>
+    <tr><td><b>Rotation / split</b></td><td>One leaver hands over to several people</td><td>Each recipient gets their own handover, with ownership split by area</td></tr>
+    <tr><td><b>Temporary leave</b></td><td>The person is coming back</td><td>A time-bounded handover, plus a "what changed while you were away" summary on return</td></tr>
+    <tr><td><b>Mixed audience</b></td><td>Successor, junior volunteers and the sponsor contact all need different views</td><td>Each view is built for its reader's role, and restricted items appear as Sealed Claims</td></tr>
+  </table>
+
+  <h3>Environments</h3>
+  <p class="small">Baton is a browser-based web app with no installation, so it runs on any laptop. Sources are connected through OAuth (the GitHub App, which only reads) or by uploading exports, which suits teams that can't grant live access. Hosting is in the cloud for the hackathon. Because the architecture is containerised, a self-hosted deployment for institutions with strict data rules is a realistic next step (§10).</p>
+</div>
+
+<!-- ======================= 3. SOLUTION ======================= -->
+<div class="section" style="zoom:.9">
+  <div class="kicker">§3 · Proposed solution</div>
+  <h2>Baton: a handover built from evidence, gaps and permissions</h2>
+  <div class="rule"></div>
+  <p class="lead">Baton doesn't write one long summary. It builds an <b>Evidence Ledger</b>, which is a structured set of small claims, each tied to exact source spans. Every handover is put together from that ledger, and its gaps are filled by the one person who can fill them.</p>
+
+  <div class="grid2" style="margin-bottom:3mm">
+    <div class="card">
+      <h4><span class="num">1</span>&nbsp; Evidence Ledger with trust states</h4>
+      <p class="small">An extraction model reads each source and pulls out small claims of 8 types: <i>Decision, Ownership, Open Question, Risk, Dependency, Blocker / Recurring Problem, Next Action, Contact</i>. Each claim points to exact character spans in its sources. A <b>separate verifier model</b> then checks whether those spans actually support the claim. Every claim ends up with exactly one visible trust state:</p>
+      <p style="line-height:2"><span class="tag t-ver">VERIFIED</span> <span class="tag t-inf">INFERRED</span> <span class="tag t-con">CONFLICTING</span> <span class="tag t-gap">UNSUPPORTED / GAP</span> <span class="tag t-att">ATTESTED</span> <span class="tag t-sea">SEALED</span></p>
+      <p class="tiny">An assumption can never look like a fact. Only <i>Verified</i> and <i>Attested</i> (confirmed by a named person, with a date) claims are shown as plain statements. Everything else is labelled where it appears.</p>
+    </div>
+    <div class="card">
+      <h4><span class="num">2</span>&nbsp; Gap Interview (our key idea)</h4>
+      <p class="small">Baton looks for <b>what the evidence can't explain</b>: decisions with no recorded reason, tasks with no owner, contradictions, risks with no mitigation, and areas that <b>only the leaver ever touched</b>. It ranks these by risk and turns the top 10–15 into short, specific questions for the leaver, for example: <i>"PR #142 switched auth to college SSO. Why, and what still has to be done before the March certificate renewal?"</i></p>
+      <p class="tiny">Answers come in as typed text (voice is planned for Round 3) and are stored as <span class="tag t-att">ATTESTED</span> evidence with the person's name and the date. Twenty minutes answering targeted questions replaces days of writing on a blank page.</p>
+    </div>
+    <div class="card">
+      <h4><span class="num">3</span>&nbsp; Sealed Claims: permissions applied when each handover is built</h4>
+      <p class="small">Every span of evidence keeps the access list of the source it came from. When we build a handover for a particular reader, a claim is included only if <b>(a)</b> that reader can open at least one of its sources, <b>(b)</b> the claim still passes verification using <i>only</i> those sources, and <b>(c)</b> its sensitivity level is within the reader's clearance. If a claim fails these checks but matters, the reader sees a locked placeholder in its place: <span class="tag t-sea">🔒 1 finance item — request access from Treasurer</span>. The reader knows something is there, and none of its content leaks.</p>
+    </div>
+    <div class="card">
+      <h4><span class="num">4</span>&nbsp; Sole-Knower Index and Readiness Score</h4>
+      <p class="small">For each area (a module, a vendor, a process), Baton measures how much of the activity came from the leaver alone. This works like a per-topic "bus factor": how many people would have to leave before nobody understands that area. Combined with how many critical gaps are still open, it gives a <b>Handover Readiness Score</b> (0–100) that the reviewer can watch go up as gaps are answered and claims are approved. This turns "is the handover good enough?" into a number.</p>
+    </div>
+  </div>
+
+  <h3>How Baton compares</h3>
+  <table>
+    <tr><th>Capability</th><th>Wiki / handover template</th><th>Generic AI summariser</th><th>Enterprise AI search</th><th style="background:#B45309">Baton</th></tr>
+    <tr><td>Captures <i>why</i> decisions were made</td><td class="part">If someone writes it</td><td class="part">If it's in the text</td><td class="part">If it's in the text</td><td class="yes">Yes, plus a Gap Interview</td></tr>
+    <tr><td>Citation on every claim, checked by a verifier</td><td class="no">—</td><td class="part">Sometimes</td><td class="part">Cites documents, not individual claims</td><td class="yes">Yes, exact span + entailment check</td></tr>
+    <tr><td>Flags missing, conflicting or uncertain information</td><td class="no">—</td><td class="no">Smooths it over</td><td class="no">—</td><td class="yes">Trust states + a list of conflicts</td></tr>
+    <tr><td>Asks the leaver about what's missing</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">Questions ranked by risk</td></tr>
+    <tr><td>Permissions applied to the <i>output</i>, not just retrieval</td><td class="part">By hand</td><td class="no">—</td><td class="part">Retrieval only</td><td class="yes">Rebuilt per reader + Sealed Claims</td></tr>
+    <tr><td>Human review, versions, acknowledgement</td><td class="part">Partial</td><td class="no">—</td><td class="no">—</td><td class="yes">Claim-level review, version diffs, sign-off</td></tr>
+    <tr><td>A concrete plan for continuing the work</td><td class="part">Free text</td><td class="no">—</td><td class="no">—</td><td class="yes">Day 1 / Week 1 / Month 1 with owners</td></tr>
+  </table>
+  <p class="tiny" style="margin-top:1.5mm">These comparisons describe each category in general terms, not specific vendors. Some enterprise tools do enforce permissions when retrieving documents. Baton's difference is that it re-checks every claim against the specific reader's permitted sources when it builds the final handover.</p>
+</div>
+
+<!-- ======================= 4. WORKFLOW ======================= -->
+<div class="section" style="zoom:.94">
+  <div class="kicker">§4 · Complete product workflow</div>
+  <h2>From connected sources to an approved, acknowledged handover</h2>
+  <div class="rule"></div>
+  <p class="small">The five steps the brief requires are marked with a dark bar. The two amber steps are our additions, and they are what makes Baton more than a summariser.</p>
+  <div class="flow">
+    <div class="step req"><div class="n">01</div><b>Connect</b><span>Admin starts a handover: <i>leaver, recipients, roles, last day</i>. They connect GitHub or upload exports, and a consent screen shows exactly what will be read.</span></div>
+    <div class="step req"><div class="n">02</div><b>Reconstruct</b><span>Sources are split into evidence units (with author, time, access list and link) and redacted. Claims are extracted, and Baton builds the timeline, ownership map and dependency graph.</span></div>
+    <div class="step req"><div class="n">03</div><b>Verify</b><span>The verifier checks each claim against its source spans. Baton applies trust states, finds conflicts and reversed decisions, and computes the Sole-Knower Index.</span></div>
+    <div class="step new"><div class="n">04</div><b>Ask</b><span>The Gap Interview: the leaver answers the ranked gap questions. Answers become Attested evidence, and the Readiness Score goes up.</span></div>
+    <div class="step req"><div class="n">05</div><b>Review</b><span>The leaver and the approver accept, edit or reject each claim, resolve conflicts and mark items sensitive. Then they approve a version.</span></div>
+    <div class="step req"><div class="n">06</div><b>Handover</b><span>A separate handover is built for each recipient, with Sealed Claims where needed. The share link requires sign-in, and the recipient acknowledges each critical item.</span></div>
+    <div class="step new"><div class="n">07</div><b>Continue</b><span>The recipient works through the plan. New questions get answered from the approved handover, and anything it can't answer goes to the leaver or another owner.</span></div>
+  </div>
+
+  <h3>What happens at each step</h3>
+  <table>
+    <tr><th style="width:13%">Step</th><th style="width:44%">System behaviour</th><th style="width:21%">Human control</th><th>Trust safeguard</th></tr>
+    <tr><td><b>Connect</b></td><td>The GitHub App (read-only) pulls commits, PRs, reviews, issues and project boards. Uploads accepted: Slack/Discord export JSON, .md/.docx/.pdf, .vtt/.txt meeting transcripts, Trello/Jira CSV. Each source is tagged with its original access list (repo collaborators, channel members) or the access list set by the person uploading it.</td><td>The admin picks which sources and dates are in scope. Private DMs are excluded by default.</td><td>A redaction gate removes secrets and personal data (API keys, phone numbers, Aadhaar-like IDs) <b>before any model sees the text</b>.</td></tr>
+    <tr><td><b>Reconstruct</b></td><td>The extraction model returns claims as structured JSON that must match a schema: type, text, owner, due date, source span IDs. Duplicate claims are merged by comparing their embeddings. A claim is marked as <i>superseded</i> when a later source reverses it.</td><td>—</td><td>Any claim that doesn't point to a span is thrown out, never shown.</td></tr>
+    <tr><td><b>Verify</b></td><td>A separate verifier model scores whether each span supports, contradicts or is unrelated to the claim. Rules then set the trust state, the conflict list and the Sole-Knower Index for each area.</td><td>—</td><td>A claim that fails verification is downgraded to <i>Inferred</i> or <i>Unsupported</i>. It is never quietly kept as fact.</td></tr>
+    <tr><td><b>Ask</b></td><td>Gaps are ranked by <i>risk × sole-knower × urgency</i>. Baton writes 10–15 questions, each showing the evidence behind it, so the leaver answers quickly in context.</td><td>The leaver can skip a question, mark it "don't know", or hand it to someone else.</td><td>Answers are stored as Attested (with name and date) and are never mixed up with machine claims.</td></tr>
+    <tr><td><b>Review</b></td><td>A review screen lists claims grouped by type and sorted by risk. Each edit is stored as a diff. When a version is approved it is hashed and frozen.</td><td>Accept, edit, reject, change the label, merge, or re-open a claim.</td><td>Nothing can be shared until a named approver signs off. Every action is recorded in an append-only log.</td></tr>
+    <tr><td><b>Handover</b></td><td>A separate handover is built from the approved version for each reader (successor, junior volunteer, external contact). It includes the continuation plan, a "people to talk to" list and an explicit unknowns section.</td><td>The recipient acknowledges each critical item, or flags it as unclear.</td><td>Permissions are re-checked when the handover is built and again in the database. Restricted claims appear sealed.</td></tr>
+    <tr><td><b>Continue</b></td><td>"Ask Baton" answers questions using only the approved handover and the reader's permitted sources. If the evidence isn't there, it says <i>"not in evidence"</i> and names who probably knows.</td><td>Unanswered questions go back to the owner.</td><td>It never answers from general knowledge or from sources the reader can't access.</td></tr>
+  </table>
+</div>
+
+<!-- ======================= 4b. WORKED EXAMPLE ======================= -->
+<div class="section">
+  <div class="kicker">§4 · Worked example (design mock-up)</div>
+  <h2>What Arjun sees on Day 1</h2>
+  <div class="rule"></div>
+  <p class="small">The sample project is <b>Project Orion</b>, a synthetic student-club event app that we build for the demo. Priya is leaving, Arjun is taking over as tech lead, and Rohan is a first-year volunteer. Below, Arjun's handover is on the left. On the right is part of Rohan's handover, built from the same approved version but for a different role.</p>
+
+  <div class="grid2" style="grid-template-columns:1.25fr 1fr; align-items:start">
+    <div class="mock">
+      <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span>Orion handover · v3 approved by Dr. Kulkarni · for <b>Arjun (Tech Lead)</b></span><span class="tag t-ver">Readiness 86</span></div>
+      <div class="body">
+        <div class="claim ver"><div class="h"><span class="type">Decision</span><span class="tag t-ver">VERIFIED</span></div>
+          The backend moved from Firebase to Supabase on 10 Apr because the free tier failed during fest registrations.
+          <div style="margin-top:1mm"><span class="cite">slack#backend · 03 Apr</span> <span class="cite">PR #118</span> <span class="cite">notes/04-08.vtt 12:41</span></div></div>
+        <div class="claim con"><div class="h"><span class="type">Decision</span><span class="tag t-con">CONFLICTING</span><span class="tag t-amb">superseded</span></div>
+          The design doc says <i>MongoDB</i>, but all migrations since April target <i>Postgres</i>. Current state: <b>Postgres</b> (newest source). The doc is out of date.
+          <div style="margin-top:1mm"><span class="cite">docs/design.md §3 (Jan)</span> <span class="cite">migrations/0007 (Apr)</span></div></div>
+        <div class="claim att"><div class="h"><span class="type">Risk · Dependency</span><span class="tag t-att">ATTESTED · Priya, 2 Nov</span></div>
+          The college SSO certificate expires on 14 Mar. Login breaks unless the IT cell renews it. Contact: Mr. Deshpande (IT), on email only.
+          <div style="margin-top:1mm"><span class="cite">Gap Interview Q3</span> <span class="cite">PR #142</span></div></div>
+        <div class="claim inf"><div class="h"><span class="type">Recurring problem</span><span class="tag t-inf">INFERRED · 6 sources</span></div>
+          Friday deploys fail repeatedly, probably because the CI runner hits its quota. This pattern was spotted across issues, not stated anywhere.
+          <div style="margin-top:1mm"><span class="cite">#97</span> <span class="cite">#103</span> <span class="cite">#121</span> <span class="cite">+3</span></div></div>
+        <div class="claim gap"><div class="h"><span class="type">Open question</span><span class="tag t-gap">UNSUPPORTED / GAP</span></div>
+          Nobody owns the payment webhook retry logic. Priya marked this "don't know" and it has been routed to Kabir (last committer).
+          <div class="acts"><span>Ask Kabir</span><span>Assign owner</span></div></div>
+        <div class="claim sea"><div class="h"><span class="type">Contact</span><span class="tag t-sea">🔒 SEALED</span></div>
+          1 item about the sponsor agreement is restricted to Treasurer + Faculty. <u>Request access</u></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mock" style="margin-bottom:3mm">
+        <div class="bar"><span>Same version · for <b>Rohan (Volunteer)</b></span></div>
+        <div class="body">
+          <div class="claim ver"><div class="h"><span class="type">Next action · Week 1</span><span class="tag t-ver">VERIFIED</span></div>Fix the event card layout bug (#130). Good first issue. Mentor: Arjun.<div style="margin-top:1mm"><span class="cite">#130</span> <span class="cite">board: To-do</span></div></div>
+          <div class="claim sea"><div class="h"><span class="tag t-sea">🔒 3 items sealed</span></div>Infrastructure &amp; finance items are not part of your role.</div>
+        </div>
+      </div>
+      <div class="mock">
+        <div class="bar"><span>Gap Interview · Priya · 4 of 12 answered</span><span class="tag t-amb">~14 min left</span></div>
+        <div class="body small">
+          <p style="margin-bottom:1.5mm"><b>Q5 · High risk · Only you touched this</b></p>
+          <p style="margin-bottom:1.5mm">"You wrote 94% of <code>/payments</code>. PR #151 is open with a failing test. Should it be merged, rewritten or dropped? Who should Arjun talk to at Razorpay support?"</p>
+          <div style="border:1px solid var(--line); border-radius:2mm; padding:2mm; color:var(--mute); font-size:8pt">Type your answer…<div style="text-align:right; margin-top:1mm">Skip · Don't know · Hand to someone else</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>The continuation plan (generated, then edited by the reviewer)</h3>
+  <div class="grid3">
+    <div class="card soft"><h4>Day 1</h4><ul class="small" style="margin:0"><li>Get access: Supabase, Vercel, GitHub admin <span class="cite">#ops</span></li><li>Read 5 key decisions (≈10 min)</li><li>Acknowledge 4 critical risks</li></ul></div>
+    <div class="card soft"><h4>Week 1</h4><ul class="small" style="margin:0"><li>Decide what happens to PR #151 (payments)</li><li>Meet Kabir about webhook ownership</li><li>Fix the CI quota (recurring Friday failures)</li></ul></div>
+    <div class="card soft"><h4>Month 1</h4><ul class="small" style="margin:0"><li>Email IT about the SSO certificate renewal (due 14 Mar)</li><li>Update design.md to reflect Postgres</li><li>Re-run Baton: did the Readiness Score hold?</li></ul></div>
+  </div>
+</div>
+
+<!-- ======================= 5. FEATURES ======================= -->
+<div class="section">
+  <div class="kicker">§5 · Main features we intend to build</div>
+  <h2>A narrow core that runs end to end, then three planned upgrades</h2>
+  <div class="rule"></div>
+  <p class="small">The brief says a focused workflow beats a long feature list, so we split the work into a <b>Round 2 MVP</b> that covers the whole workflow, and <b>three Round 3 improvements</b> that we commit to now.</p>
+
+  <table>
+    <tr><th style="width:4%">#</th><th style="width:25%">Feature</th><th>What it does</th><th style="width:12%">Round</th></tr>
+    <tr><td>F1</td><td><b>Handover workspace</b></td><td>Create a handover with the leaver, recipients, roles, last day and scope. Includes a consent screen and an audit log.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F2</td><td><b>Source ingestion</b></td><td>A read-only GitHub App connector (commits, PRs, reviews, issues, projects), plus uploads for Slack/Discord JSON, MD/DOCX/PDF, VTT transcripts and Trello/Jira CSV. All sources are turned into evidence units with their access lists.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F3</td><td><b>Redaction gate</b></td><td>Detects secrets and personal data before anything reaches a model, and suggests a sensitivity label (Public / Internal / Confidential / Restricted) that a human confirms.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F4</td><td><b>Evidence Ledger</b></td><td>Extracts the 8 claim types with exact source spans, merges duplicates, and marks claims superseded when a later source reverses them.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F5</td><td><b>Verifier &amp; trust states</b></td><td>An independent check that each claim is supported by its sources. Assigns the 6 trust states, a conflict list and a confidence score.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F6</td><td><b>Timeline, ownership map &amp; dependency graph</b></td><td>A timeline of decisions, a who-owns-what table, and a dependency and blocker graph. Every element in them links to its evidence.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F7</td><td><b>Gap detector + Gap Interview (text)</b></td><td>Calculates the Sole-Knower Index, ranks gaps, and generates the interview questions. Answers become Attested evidence.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F8</td><td><b>Review screen</b></td><td>Accept, edit, reject, change label or merge claims. Edits are stored as diffs, versions can be compared, and a named approver signs off.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F9</td><td><b>Role-based handover with Sealed Claims</b></td><td>Builds a separate handover for each reader from their permitted sources, including the continuation plan and the unknowns section. Shared through an authenticated link, with acknowledgement for each critical item and export to PDF/Markdown.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>F10</td><td><b>Readiness Score</b></td><td>A live 0–100 score that combines gap coverage, how many claims have been approved and the Sole-Knower Index.</td><td><span class="tag t-amb">R2 MVP</span></td></tr>
+    <tr><td>R3-1</td><td><b>Ask Baton (Q&amp;A grounded in evidence)</b></td><td>The incoming person asks questions after the handover. Answers come only from the approved handover and permitted sources, and include citations. When the evidence isn't there it says "not in evidence" and passes the question to the right owner.</td><td><span class="tag t-ver">R3 commit</span></td></tr>
+    <tr><td>R3-2</td><td><b>Live sync and stale-handover alerts</b></td><td>Live OAuth connections to Slack/Discord, Google Drive and Jira/Linear, with incremental syncing. Baton alerts the owner when new activity contradicts or extends an approved handover, e.g. "v3 is stale: 4 claims changed".</td><td><span class="tag t-ver">R3 commit</span></td></tr>
+    <tr><td>R3-3</td><td><b>Voice Gap Interview + quality dashboard</b></td><td>Spoken answers are transcribed and saved as Attested evidence with timestamps. A public evaluation dashboard shows precision, recall and leakage on our benchmark for every release.</td><td><span class="tag t-ver">R3 commit</span></td></tr>
+  </table>
+  <p class="tiny" style="margin-top:2mm">If we need to cut scope, we'll cut in this order: F6 graph view (fall back to a table) → DOCX/PDF parsing (Markdown only) → Discord export. The <b>Ledger → Verify → Ask → Review → role-based handover</b> path will not be cut.</p>
+</div>
+
+<!-- ======================= 6. TECH ======================= -->
+<div class="section" style="zoom:.94">
+  <div class="kicker">§6 · Technology stack and architecture</div>
+  <h2>Architecture: every claim traceable, permissions enforced at three layers</h2>
+  <div class="rule"></div>
+
+  <div class="arch" style="margin-bottom:4mm">
+    <div class="lab">Sources</div>
+    <div class="row"><div class="box"><b>GitHub App</b>commits · PRs · reviews · issues · projects</div><div class="box"><b>Chat exports</b>Slack / Discord JSON</div><div class="box"><b>Docs &amp; notes</b>MD · DOCX · PDF · VTT</div><div class="box"><b>Task boards</b>Trello / Jira CSV</div></div>
+    <div class="arrow">▼ fetched by background workers</div>
+    <div class="lab">Ingest &amp; protect</div>
+    <div class="row"><div class="box"><b>Normaliser</b>splits into evidence units: text, author, time, URI, character offsets</div><div class="box"><b>ACL mapper</b>copies source permissions to each principal</div><div class="box sec"><b>Redaction gate</b>Presidio personal-data detection + secret-pattern rules + sensitivity classifier</div></div>
+    <div class="arrow">▼ only redacted text goes past this point</div>
+    <div class="lab">Reasoning pipeline</div>
+    <div class="row"><div class="box hl"><b>Extractor</b>LLM with JSON-schema output, returns typed claims + span IDs</div><div class="box hl"><b>Resolver</b>embedding-based merging, supersession, conflict detection</div><div class="box hl"><b>Verifier</b>separate LLM call: supports / contradicts / unrelated</div><div class="box hl"><b>Gap engine</b>Sole-Knower Index, gap ranking, interview questions</div></div>
+    <div class="arrow">▼</div>
+    <div class="lab">Store</div>
+    <div class="row"><div class="box"><b>PostgreSQL + pgvector</b>ledger, evidence, embeddings, versions, append-only audit log</div><div class="box sec"><b>Row-Level Security</b>ACL enforced inside the database</div><div class="box"><b>Object storage</b>encrypted raw uploads, deletable on request</div></div>
+    <div class="arrow">▼</div>
+    <div class="lab">Experience</div>
+    <div class="row"><div class="box"><b>Review screen</b>claim-level edits, version diffs, approval</div><div class="box"><b>Gap Interview</b>leaver-facing</div><div class="box sec"><b>Handover builder</b>per-reader re-verification + Sealed Claims</div><div class="box"><b>Handover viewer</b>plan · acknowledgement · export</div></div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:0">Technology stack</h3>
+      <table>
+        <tr><th style="width:30%">Layer</th><th>Choice and why</th></tr>
+        <tr><td>Frontend</td><td><b>Next.js + TypeScript</b>, Tailwind, shadcn/ui; React Flow for the graph view</td></tr>
+        <tr><td>API &amp; workers</td><td><b>FastAPI (Python)</b> + Pydantic claim schemas; Redis + RQ workers for ingestion</td></tr>
+        <tr><td>Database</td><td><b>PostgreSQL + pgvector</b> (Supabase), with Row-Level Security for permissions</td></tr>
+        <tr><td>Auth</td><td>Supabase Auth (Google / GitHub OAuth), role claims in the JWT</td></tr>
+        <tr><td>LLMs</td><td><b>Claude (Anthropic) API</b>. A larger model handles extraction and plan writing with structured output; a smaller, separate model handles verification. Calls go through a provider adapter so models can be swapped.</td></tr>
+        <tr><td>Embeddings</td><td>Open-source sentence-transformer (e.g. bge-small), so embedding runs locally at no cost</td></tr>
+        <tr><td>Privacy</td><td>Microsoft Presidio, plus regex/entropy rules to catch secrets</td></tr>
+        <tr><td>Parsing</td><td>GitHub REST/GraphQL, pdfplumber, python-docx, webvtt-py</td></tr>
+        <tr><td>Hosting &amp; CI</td><td>Vercel (web), Render/Railway (API + worker), GitHub Actions running leakage &amp; eval tests</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Evidence model (core tables)</h3>
+      <div class="card soft mono" style="font-size:7.4pt; line-height:1.45">
+<b>EvidenceUnit</b>(id, source_id, uri, char_start, char_end,<br>&nbsp; author, ts, acl[principal], sensitivity, redacted_text)<br>
+<b>Claim</b>(id, type, text, owner, due, trust_state,<br>&nbsp; confidence, origin: model|human, superseded_by)<br>
+<b>ClaimEvidence</b>(claim_id, evidence_id,<br>&nbsp; relation: supports|contradicts, verifier_score)<br>
+<b>Gap</b>(id, area, kind, risk, sole_knower, question, status)<br>
+<b>Attestation</b>(gap_id, person, answer, ts)<br>
+<b>Review</b>(claim_id, actor, action, before, after, ts)<br>
+<b>Version</b>(id, snapshot_hash, approved_by, ts)<br>
+<b>Share</b>(version_id, recipient, role, built_at, ack[])<br>
+<b>AuditLog</b>(actor, action, object, ts) — append-only
+      </div>
+      <h3>The visibility rule</h3>
+      <div class="card amber small" style="font-family:'JetBrains Mono'; font-size:7.6pt">visible(c, r) ⇔ E<sub>r</sub> = {e ∈ E(c) : r ∈ acl(e)} ≠ ∅<br>&nbsp;&nbsp;∧ verify(c, E<sub>r</sub>) = supports<br>&nbsp;&nbsp;∧ sensitivity(c) ≤ clearance(r)<br>otherwise → SEALED (or hidden if Restricted)</div>
+      <p class="tiny">In words: reader <i>r</i> sees claim <i>c</i> only if r can open at least one of c's sources, those sources alone still support c, and c's sensitivity is within r's clearance. The citations shown are only the ones r can open. This rule is enforced in three places: the handover builder, Postgres RLS, and a CI test that fails the build if any planted secret reaches an unauthorised role.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= 6b. TRUST ======================= -->
+<div class="section">
+  <div class="kicker">§6 · Privacy, security, traceability and human review</div>
+  <h2>Built to the brief's trust requirements</h2>
+  <div class="rule"></div>
+  <table style="margin-bottom:4mm">
+    <tr><th style="width:32%">Trust requirement (from the brief)</th><th>How Baton meets it</th></tr>
+    <tr><td>Don't present generated assumptions as verified organisational truth</td><td>Every claim has one of six visible trust states. Only <i>Verified</i> (passed the independent check) and <i>Attested</i> (a named person, with a date) appear as plain statements. Claims without a source span are thrown out. Model-written and human-written text are always labelled separately.</td></tr>
+    <tr><td>Don't expose confidential information just because it appeared in a connected source</td><td>Redaction happens before any model call. Each source keeps its access list, sensitivity labels are confirmed by a person, and handovers are rebuilt per reader with Sealed Claims. RLS backs this up in the database. Private DMs are excluded by default.</td></tr>
+    <tr><td>Let authorised users correct, reject and approve the final handover</td><td>Claim-level accept / edit / reject / change label, with diffs, version history and a named approver. Nothing can be shared before approval. The recipient acknowledges what they've received.</td></tr>
+    <tr><td>Use synthetic, public, permissioned or anonymised data for demos</td><td>All demo data comes from <b>Project Orion</b>, a synthetic project we create ourselves (see §9). Live connectors are only demoed on our own test repositories.</td></tr>
+  </table>
+
+  <div class="grid3">
+    <div class="card"><h4>Security</h4><ul class="small" style="margin:0"><li>The GitHub App asks only for read scopes, and tokens are encrypted when stored</li><li>Uploads are stored encrypted; a "delete handover" option erases the raw data</li><li>Share links require sign-in, expire, and can be revoked</li><li>Append-only audit log of every view and edit</li></ul></div>
+    <div class="card"><h4>Responsible design</h4><ul class="small" style="margin:0"><li>The leaver gives consent and can review everything that's attributed to them</li><li><b>Baton is not a performance or surveillance tool:</b> it has no per-person productivity metrics</li><li>We use API settings where providers don't train on our data</li><li>Built with India's DPDP Act 2023 in mind (purpose limitation, deletion) [R3]</li></ul></div>
+    <div class="card"><h4>AI reliability</h4><ul class="small" style="margin:0"><li>Structured output is checked against a schema; malformed output is retried, then dropped</li><li>The model that verifies claims is separate from the one that extracted them</li><li>A fixed benchmark is re-run on every change to prompts or models</li><li>When evidence is missing, Baton says <i>"not in evidence"</i> instead of guessing</li></ul></div>
+  </div>
+
+  <h3>Key technical risks and mitigations</h3>
+  <table>
+    <tr><th style="width:28%">Risk</th><th>Mitigation</th></tr>
+    <tr><td>The model invents claims (hallucination)</td><td>Claims must point to a source span, a separate model verifies them, the trust state is shown where the claim appears, and a human reviews before sharing</td></tr>
+    <tr><td>Restricted information leaks into another reader's handover</td><td>Handovers are rebuilt per reader, RLS enforces access in the database, and a CI leakage test with planted secrets fails the build</td></tr>
+    <tr><td>We can't get access to real organisations' data</td><td>The MVP relies on uploads and a synthetic dataset; the only live connector is GitHub on repos we own</td></tr>
+    <tr><td>LLM cost and latency on large projects</td><td>Claims are extracted once per evidence unit and cached; the smaller model verifies; incremental re-processing; a project the size of the demo should cost well under ₹100 per run</td></tr>
+    <tr><td>Scope creep during the build window</td><td>Fixed MVP, the cut-order list in §5, and the Round 3 commitments locked in advance</td></tr>
+  </table>
+</div>
+
+<!-- ======================= 7. TEAM ROLES ======================= -->
+<div class="section">
+  <div class="kicker">§7 · Responsibilities of each team member</div>
+  <h2>Clear owners, with no single point of failure</h2>
+  <div class="rule"></div>
+  <p class="small">Each part of the system has one owner and one backup. We apply our own idea to ourselves: every component has a second person who understands it, and we keep a running Baton handover of our own project.</p>
+  <table style="margin-bottom:4mm">
+    <tr><th style="width:24%">Member &amp; role</th><th>Owns</th><th style="width:20%">Backup for</th></tr>
+    <tr><td><b class="fill">[Member 1]</b><br>Team Lead · Product &amp; UX</td><td>User research and interviews, workflow design, Review screen and Gap Interview UX, the Project Orion storyline, pitch and documentation, judge demo</td><td>Frontend (M4)</td></tr>
+    <tr><td><b class="fill">[Member 2]</b><br>AI / ML Engineer</td><td>Extraction and verifier prompts and schemas, merging duplicates and detecting conflicts, gap ranking and the Sole-Knower Index, the evaluation harness (precision, recall, leakage)</td><td>Backend (M3)</td></tr>
+    <tr><td><b class="fill">[Member 3]</b><br>Backend, Integrations &amp; Security</td><td>FastAPI services, GitHub App and file parsers, data model, permission mapping, Postgres RLS, redaction gate, the per-reader handover builder, audit log, deployment</td><td>AI pipeline (M2)</td></tr>
+    <tr><td><b class="fill">[Member 4]</b><br>Frontend &amp; Quality</td><td>Next.js app: workspace, timeline, ownership and dependency views, handover viewer and acknowledgement, accessibility (WCAG AA), end-to-end tests and the CI leakage test</td><td>Product &amp; UX (M1)</td></tr>
+  </table>
+  <div class="card soft small"><b>Working rhythm:</b> a 15-minute daily stand-up, GitHub Projects board, all work through pull requests with at least one reviewer, and a short note in the PR template for every architecture decision. That also gives us realistic data to test Baton on ourselves.</div>
+</div>
+
+<!-- ======================= 8. PLAN ======================= -->
+<div class="section">
+  <div class="kicker">§8 · Development plan across all three rounds</div>
+  <h2>Plan → Build the core → Finish and prove it</h2>
+  <div class="rule"></div>
+  <p class="small">In line with the participation rules, <b>no product code is written before the official build window</b>. Round 1 covers research, design and specifications only. All later work will happen in a public repository with a full commit history, and any templates and AI tools we use will be disclosed.</p>
+
+  <div class="card" style="margin:3mm 0 4mm">
+    <div class="gantt">
+      <div></div>
+      <div class="hd">R1·a</div><div class="hd">R1·b</div><div class="hd">R1·c</div><div class="hd">R2·1</div><div class="hd">R2·2</div><div class="hd">R2·3</div><div class="hd">R2·4</div><div class="hd">R2·5</div><div class="hd">R3·1</div><div class="hd">R3·2</div><div class="hd">R3·3</div><div class="hd">R3·4</div>
+      <div class="lbl">User research &amp; survey</div><div class="b r1" style="grid-column:2/4"></div>
+      <div class="lbl">Orion dataset spec + answer key</div><div class="b r1" style="grid-column:3/5"></div>
+      <div class="lbl">Wireframes &amp; architecture</div><div class="b r1" style="grid-column:3/5"></div>
+      <div class="lbl">Foundation: auth, DB, RLS, CI</div><div class="b r2" style="grid-column:5/6"></div>
+      <div class="lbl">Ingestion + redaction</div><div class="b r2" style="grid-column:5/7"></div>
+      <div class="lbl">Ledger: extract + verify</div><div class="b r2" style="grid-column:6/8"></div>
+      <div class="lbl">Gap engine + interview</div><div class="b r2" style="grid-column:7/9"></div>
+      <div class="lbl">Review + role-based handover</div><div class="b r2" style="grid-column:8/10"></div>
+      <div class="lbl">Eval + user test + deploy</div><div class="b r2" style="grid-column:9/10"></div>
+      <div class="lbl">R3-1 Ask Baton</div><div class="b r3" style="grid-column:10/12"></div>
+      <div class="lbl">R3-2 Live sync + stale alerts</div><div class="b r3" style="grid-column:10/13"></div>
+      <div class="lbl">R3-3 Voice + quality dashboard</div><div class="b r3" style="grid-column:11/13"></div>
+      <div class="lbl">Hardening, a11y, docs, video</div><div class="b r3" style="grid-column:12/14"></div>
+    </div>
+    <p class="tiny" style="margin-top:2mm">Columns are relative phases. They will be mapped to the organiser's actual dates once those are published.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><span class="tag t-sea">Round 1 · The Plan</span><h4 style="margin-top:1.5mm">Thinking, evidence, design</h4><ul class="small" style="margin:0"><li>Interviews and survey with club leads and successors (Appendix A)</li><li>Project Orion specification and ground-truth answer key</li><li>Low-fidelity wireframes for all 7 steps</li><li>Architecture, data model, permission rule</li><li><b>Deliverable:</b> this document</li></ul></div>
+    <div class="card"><span class="tag t-amb">Round 2 · The Build</span><h4 style="margin-top:1.5mm">The core runs end to end</h4><ul class="small" style="margin:0"><li>F1–F10 live on a deployed URL</li><li>A judge can upload the Orion files or connect a repo, then get a cited, reviewable handover</li><li>First benchmark scores published</li><li>Usability test with 5 students</li><li><b>Deliverable:</b> MVP, repo, updated document, 3 commitments</li></ul></div>
+    <div class="card"><span class="tag t-ver">Round 3 · The Finish</span><h4 style="margin-top:1.5mm">Complete, reliable, documented</h4><ul class="small" style="margin:0"><li>R3-1 Ask Baton · R3-2 Live sync · R3-3 Voice and dashboard</li><li>Failure-case testing: empty sources, contradictions, sudden exit with no interview</li><li>Accessibility pass, setup guide, limitations</li><li><b>Deliverable:</b> final product, demo video, report</li></ul></div>
+  </div>
+
+  <h3>Definition of done for the Round 2 demo</h3>
+  <p class="small">A judge with no walkthrough should be able to: <b>(1)</b> create a handover, <b>(2)</b> upload the Orion files, <b>(3)</b> see claims with clickable citations and trust states, <b>(4)</b> answer two Gap Interview questions as Priya, <b>(5)</b> edit and approve as the reviewer, and <b>(6)</b> open the Tech Lead and Volunteer views side by side and see the sealed items. The whole run should take under 10 minutes.</p>
+</div>
+
+<!-- ======================= 9. IMPACT ======================= -->
+<div class="section">
+  <div class="kicker">§9 · Expected impact</div>
+  <h2>Measured, not just claimed</h2>
+  <div class="rule"></div>
+  <p class="lead">The final evaluation principle rewards trustworthy limitations over unsupported claims. So we'll test Baton against a benchmark we design to have a known answer key, and with real users doing timed tasks.</p>
+
+  <div class="grid2" style="margin-bottom:4mm">
+    <div class="card">
+      <h4>Project Orion benchmark (synthetic)</h4>
+      <p class="small">A synthetic 3-month history of a 6-person club project: about 150 artefacts (commits, PRs, issues, a Slack export, 6 meeting transcripts, 3 docs and a Trello CSV). We plant <b>~50 ground-truth facts</b> in it:</p>
+      <ul class="small" style="margin:0"><li>12 decisions, 3 of them later reversed</li><li>6 contradictions across sources</li><li>8 risks and 6 dependencies</li><li>8 sole-knower facts that exist <i>only</i> in the leaver's head (and should come up as Gap questions)</li><li>6 confidential items (sponsor amount, a fake API key, an HR note) that must <b>never</b> reach the Volunteer view</li></ul>
+    </div>
+    <div class="card">
+      <h4>Metrics and targets</h4>
+      <table>
+        <tr><th>Metric</th><th>Target</th></tr>
+        <tr><td>Citation precision (cited source supports claim)</td><td><b>≥ 90%</b></td></tr>
+        <tr><td>Recall of planted facts</td><td><b>≥ 75%</b></td></tr>
+        <tr><td>Contradictions flagged</td><td><b>≥ 5 of 6</b></td></tr>
+        <tr><td>Sole-knower facts turned into Gap questions</td><td><b>≥ 6 of 8</b></td></tr>
+        <tr><td>Confidential items leaked to unauthorised roles</td><td><b>0</b> (fails the build)</td></tr>
+        <tr><td>Time for a newcomer to answer 10 "take-over" questions correctly</td><td><b>−50%</b> vs raw sources</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>Who benefits and how</h3>
+  <div class="grid4">
+    <div class="card soft"><h4>Incoming member</h4><p class="small" style="margin:0">Can start contributing in days rather than weeks, knows which landmines to avoid, and can see clearly what is still unknown.</p></div>
+    <div class="card soft"><h4>Departing member</h4><p class="small" style="margin:0">Spends about 20 minutes answering questions and correcting a draft instead of writing pages, and leaves with their work properly credited.</p></div>
+    <div class="card soft"><h4>Organisation</h4><p class="small" style="margin:0">Keeps sponsor relationships, credentials and context through every graduation, and can track a Readiness Score for each handover.</p></div>
+    <div class="card soft"><h4>Ecosystem</h4><p class="small" style="margin:0">Student clubs, NGOs and open-source projects get an option that's free and puts privacy first. These groups have the most turnover and the fewest tools today.</p></div>
+  </div>
+  <p class="tiny" style="margin-top:3mm">All targets above are hypotheses we'll test in Round 2 and report honestly in Round 3, including any targets we miss.</p>
+</div>
+
+<!-- ======================= 10. FUTURE ======================= -->
+<div class="section">
+  <div class="kicker">§10 · Future scope after the event</div>
+  <h2>From one-off handovers to continuous protection</h2>
+  <div class="rule"></div>
+  <div class="grid2" style="margin-bottom:4mm">
+    <div class="card"><h4>1 · Always-ready handovers</h4><p class="small" style="margin:0">Baton runs all the time, not only when someone resigns. Teams get an always-current handover for every key person and an organisation-wide <b>knowledge-risk heatmap</b> that shows where only one person understands something, before anyone leaves.</p></div>
+    <div class="card"><h4>2 · A permission-aware knowledge layer for AI assistants</h4><p class="small" style="margin:0">Approved handovers become available to other AI assistants through an MCP server, with the same Sealed Claims rule. Any assistant could then answer "why did we do this?" from evidence a human has approved.</p></div>
+    <div class="card"><h4>3 · More sources and more settings</h4><p class="small" style="margin:0">Microsoft Teams, Confluence, Notion, Linear, email (with consent), and Google Meet transcripts. Also new settings: research labs (when a PhD student graduates), NGOs (volunteer rotation) and open-source maintainers handing over a project.</p></div>
+    <div class="card"><h4>4 · Self-hosted, privacy-first edition</h4><p class="small" style="margin:0">A Docker deployment that runs entirely on an institution's own servers, with an option to use local open-weight models. It would be aligned with the DPDP Act, and suits colleges, government projects and regulated industries.</p></div>
+  </div>
+  <div class="card dark">
+    <h4>Sustainability model</h4>
+    <p style="margin:0; font-size:9pt">A <b>free tier for student clubs, NGOs and open-source projects</b>, a paid team plan for startups and small and mid-sized businesses (more sources, longer history, SSO), and a self-hosted licence for institutions. The open evaluation benchmark (Project Orion) will be released publicly so other teams can measure their handover tools the same way.</p>
+  </div>
+
+  <h3>Known limitations (stated up front)</h3>
+  <ul class="small">
+    <li>Baton can only reconstruct what was recorded somewhere, or what the leaver attests to. Knowledge from purely verbal conversations that nobody remembers can't be recovered. Baton will flag those gaps, but it can't fill them.</li>
+    <li>Permissions copied from export files (e.g. Slack JSON) are only as accurate as the export. Admins confirm them when uploading.</li>
+    <li>The verifier reduces errors but doesn't remove them. That's why human approval is required, not optional.</li>
+  </ul>
+</div>
+
+<!-- ======================= 11. TEAM ======================= -->
+<div class="section">
+  <div class="kicker">§11 · Team and participant details</div>
+  <h2>The team</h2>
+  <div class="rule"></div>
+  <table style="margin-bottom:4mm">
+    <tr><th style="width:26%">Field</th><th>Details</th></tr>
+    <tr><td>Team name</td><td><span class="fill">[Team Name]</span></td></tr>
+    <tr><td>Team ID / registration no.</td><td><span class="fill">[ID]</span></td></tr>
+    <tr><td>Institution / organisation</td><td><span class="fill">[College / Company, City]</span></td></tr>
+    <tr><td>Primary contact</td><td><span class="fill">[Name · email · phone]</span></td></tr>
+    <tr><td>Repository (from Round 2)</td><td><span class="fill">[github.com/…]</span></td></tr>
+  </table>
+  <table>
+    <tr><th style="width:5%">#</th><th style="width:22%">Name</th><th style="width:20%">Role</th><th style="width:25%">Institution · Year / Branch</th><th>Email · Phone · GitHub / LinkedIn</th></tr>
+    <tr><td>1</td><td><span class="fill">[Name] (Lead)</span></td><td>Product &amp; UX</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
+    <tr><td>2</td><td><span class="fill">[Name]</span></td><td>AI / ML Engineer</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
+    <tr><td>3</td><td><span class="fill">[Name]</span></td><td>Backend, Integrations &amp; Security</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
+    <tr><td>4</td><td><span class="fill">[Name]</span></td><td>Frontend &amp; Quality</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
+  </table>
+
+  <!-- ======================= APPENDIX ======================= -->
+  <h3 style="margin-top:8mm">Appendix A · Primary research plan</h3>
+  <p class="small">We're interviewing people on both sides of real handovers in Pune college clubs and small teams, and running a short survey. Results will be reported in Round 2.</p>
+  <div class="grid2">
+    <div class="card soft"><h4>Interview guide (20 min)</h4><ul class="small" style="margin:0"><li>Tell us about the last time you took over (or handed over) a project.</li><li>What did you only find out <i>after</i> the previous person had left?</li><li>Where did the missing information actually turn out to be?</li><li>What would you never want shared with a successor or volunteer?</li><li>How long did it take until you felt confident making changes?</li></ul></div>
+    <div class="card soft"><h4>Survey (target n ≥ 40)</h4><ul class="small" style="margin:0"><li>Weeks to feel productive after taking over (scale)</li><li>Hours the leaver spent on handover (scale)</li><li>Have you ever lost access to credentials, contacts or decisions? (Y/N + example)</li><li>Rank the most damaging losses: rationale, unfinished work, contacts, credentials, recurring issues</li><li>Would you trust an AI handover if every claim were cited and reviewed? (Likert)</li></ul></div>
+  </div>
+  <div class="card amber small" style="margin-top:3mm"><b>Early findings:</b> <span class="fill">[Add interview count, survey n and 2–3 headline numbers or quotes before submission]</span></div>
+
+  <h3>Appendix B · References</h3>
+  <p class="small" style="margin-bottom:1mm">[R1] Panopto (2018). <i>Workplace Knowledge and Productivity Report</i>: 42% of institutional knowledge is unique to the individual; 5.3 hours/week spent waiting for or recreating information. panopto.com</p>
+  <p class="small" style="margin-bottom:1mm">[R2] McFeely, S. &amp; Wigert, B. (2019). <i>This Fixable Problem Costs U.S. Businesses $1 Trillion</i>. Gallup Workplace. gallup.com/workplace/247391</p>
+  <p class="small" style="margin-bottom:1mm">[R3] Government of India (2023). <i>Digital Personal Data Protection Act, 2023</i>. meity.gov.in</p>
+
+  <h3>Appendix C · Disclosure of AI and tools</h3>
+  <p class="small">AI assistance (Claude) was used to help structure and draft this planning document. All product decisions and research were reviewed by the team. In the build rounds we will use the open-source libraries and APIs listed in §6 under their licences, disclose any templates or boilerplate, and write no product code before the official build window.</p>
+</div>
+
+</body>
+</html>
