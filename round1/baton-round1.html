@@ -133,7 +133,7 @@
     <div class="pill"><b>Sealed Claims</b><span>Each reader's handover is built from only the sources that reader can open. Restricted items show up as a locked placeholder, so the reader knows they exist without seeing what they say.</span></div>
   </div>
   <div class="meta">
-    <div>Team <b class="fill">[Team Name]</b> · Team ID <b class="fill">[ID]</b></div>
+    <div>Team <b>leisure</b> · Solo entry by <b>Sidharth Monangi</b></div>
     <div>Submitted <b>November 2026</b></div>
   </div>
 </div>
@@ -166,7 +166,7 @@
     <div><span class="k">4</span>Complete product workflow: §4 (with worked example)</div>
     <div><span class="k">5</span>Main features: §5</div>
     <div><span class="k">6</span>Technology stack and architecture: §6</div>
-    <div><span class="k">7</span>Team responsibilities: §7</div>
+    <div><span class="k">7</span>Responsibilities (solo plan): §7</div>
     <div><span class="k">8</span>Development plan across all three rounds: §8</div>
     <div><span class="k">9</span>Expected impact: §9</div>
     <div><span class="k">10</span>Future scope: §10</div>
@@ -176,7 +176,7 @@
 
   <div class="card amber" style="margin-top:4mm">
     <h4>How we line up with the judging criteria</h4>
-    <p class="small" style="margin:0"><b>Understanding (25):</b> we pin down what is lost and why documentation fails (§1). <b>Solution (25):</b> each workflow step answers a specific failure (§3–4). <b>Technical (20):</b> permissions are enforced at three separate layers, and every claim is tied to an exact span of its source (§6). <b>Originality (15):</b> Gap Interview, Sealed Claims and a Sole-Knower Index, which together go well beyond summarising (§3). <b>Feasibility (15):</b> the scope is a narrow MVP that we can demo and measure, and anything beyond it is held for Round 3 (§5, §8).</p>
+    <p class="small" style="margin:0"><b>Understanding (25):</b> we pin down what is lost and why documentation fails (§1). <b>Solution (25):</b> each workflow step answers a specific failure (§3–4). <b>Technical (20):</b> permissions are enforced at three separate layers, and every claim is tied to an exact span of its source (§6). <b>Originality (15):</b> Gap Interview, Sealed Claims and a Sole-Knower Index, which together go well beyond summarising (§3). <b>Feasibility (15):</b> this is a solo entry, so the scope is a deliberately narrow MVP on managed services that we can demo and measure, and anything beyond it is held for Round 3 (§5, §8).</p>
   </div>
 </div>
 
@@ -504,17 +504,25 @@
 <!-- ======================= 7. TEAM ROLES ======================= -->
 <div class="section">
   <div class="kicker">§7 · Responsibilities of each team member</div>
-  <h2>Clear owners, with no single point of failure</h2>
+  <h2>One builder, four workstreams</h2>
   <div class="rule"></div>
-  <p class="small">Each part of the system has one owner and one backup. We apply our own idea to ourselves: every component has a second person who understands it, and we keep a running Baton handover of our own project.</p>
+  <p class="lead">Team <b>leisure</b> is a solo entry: <b>Sidharth Monangi</b> owns every part of Baton, from research to deployment. The plan is scoped for one person, and each workstream below has a clear deliverable and a planned share of the build time.</p>
   <table style="margin-bottom:4mm">
-    <tr><th style="width:24%">Member &amp; role</th><th>Owns</th><th style="width:20%">Backup for</th></tr>
-    <tr><td><b class="fill">[Member 1]</b><br>Team Lead · Product &amp; UX</td><td>User research and interviews, workflow design, Review screen and Gap Interview UX, the Project Orion storyline, pitch and documentation, judge demo</td><td>Frontend (M4)</td></tr>
-    <tr><td><b class="fill">[Member 2]</b><br>AI / ML Engineer</td><td>Extraction and verifier prompts and schemas, merging duplicates and detecting conflicts, gap ranking and the Sole-Knower Index, the evaluation harness (precision, recall, leakage)</td><td>Backend (M3)</td></tr>
-    <tr><td><b class="fill">[Member 3]</b><br>Backend, Integrations &amp; Security</td><td>FastAPI services, GitHub App and file parsers, data model, permission mapping, Postgres RLS, redaction gate, the per-reader handover builder, audit log, deployment</td><td>AI pipeline (M2)</td></tr>
-    <tr><td><b class="fill">[Member 4]</b><br>Frontend &amp; Quality</td><td>Next.js app: workspace, timeline, ownership and dependency views, handover viewer and acknowledgement, accessibility (WCAG AA), end-to-end tests and the CI leakage test</td><td>Product &amp; UX (M1)</td></tr>
+    <tr><th style="width:22%">Workstream</th><th>What I'm responsible for</th><th style="width:13%">Share of build time</th></tr>
+    <tr><td><b>Product &amp; UX</b></td><td>User research and interviews, workflow design, the Review screen and Gap Interview UX, the Project Orion storyline, documentation, pitch and judge demo</td><td>20%</td></tr>
+    <tr><td><b>AI pipeline</b></td><td>Extraction and verifier prompts and schemas, merging duplicates and detecting conflicts, gap ranking and the Sole-Knower Index, the evaluation harness (precision, recall, leakage)</td><td>30%</td></tr>
+    <tr><td><b>Backend, integrations &amp; security</b></td><td>FastAPI services, GitHub App and file parsers, data model, permission mapping, Postgres RLS, redaction gate, the per-reader handover builder, audit log, deployment</td><td>30%</td></tr>
+    <tr><td><b>Frontend &amp; quality</b></td><td>Next.js app: workspace, timeline, ownership and dependency views, handover viewer and acknowledgement, accessibility (WCAG AA), end-to-end tests and the CI leakage test</td><td>20%</td></tr>
   </table>
-  <div class="card soft small"><b>Working rhythm:</b> a 15-minute daily stand-up, GitHub Projects board, all work through pull requests with at least one reviewer, and a short note in the PR template for every architecture decision. That also gives us realistic data to test Baton on ourselves.</div>
+
+  <h3>How a solo builder keeps this feasible</h3>
+  <div class="grid2">
+    <div class="card"><h4>Use managed services, not infrastructure</h4><p class="small" style="margin:0">Supabase provides the database, authentication, Row-Level Security and file storage in one place, and Vercel hosts the front end. Almost no time goes into running servers, so nearly all of it goes into the parts that make Baton different: the Ledger, the Gap Interview and Sealed Claims.</p></div>
+    <div class="card"><h4>Build in vertical slices</h4><p class="small" style="margin:0">Each sprint ends with the full workflow running end to end, even if it's rough at first. A judge can try the product at any point, and nothing important is left to integrate at the last minute.</p></div>
+    <div class="card"><h4>A fixed cut order</h4><p class="small" style="margin:0">If time runs short, features are dropped in the order listed in §5. The core path (Ledger → Verify → Ask → Review → role-based handover) is never cut.</p></div>
+    <div class="card"><h4>AI-assisted development, disclosed</h4><p class="small" style="margin:0">I'll use AI coding assistants to move faster, as the rules allow, and disclose them in the repository. All design decisions, testing and evaluation are mine, and the commit history will show the work being done during the build window.</p></div>
+  </div>
+  <div class="card soft small" style="margin-top:3mm"><b>Working rhythm:</b> a GitHub Projects board, small pull requests with descriptive messages, and a short decision note for every architecture choice. My own commit, issue and decision history also gives Baton a realistic second dataset to test on, alongside Project Orion.</div>
 </div>
 
 <!-- ======================= 8. PLAN ======================= -->
@@ -622,29 +630,24 @@
   <h2>The team</h2>
   <div class="rule"></div>
   <table style="margin-bottom:4mm">
-    <tr><th style="width:26%">Field</th><th>Details</th></tr>
-    <tr><td>Team name</td><td><span class="fill">[Team Name]</span></td></tr>
-    <tr><td>Team ID / registration no.</td><td><span class="fill">[ID]</span></td></tr>
-    <tr><td>Institution / organisation</td><td><span class="fill">[College / Company, City]</span></td></tr>
-    <tr><td>Primary contact</td><td><span class="fill">[Name · email · phone]</span></td></tr>
-    <tr><td>Repository (from Round 2)</td><td><span class="fill">[github.com/…]</span></td></tr>
-  </table>
-  <table>
-    <tr><th style="width:5%">#</th><th style="width:22%">Name</th><th style="width:20%">Role</th><th style="width:25%">Institution · Year / Branch</th><th>Email · Phone · GitHub / LinkedIn</th></tr>
-    <tr><td>1</td><td><span class="fill">[Name] (Lead)</span></td><td>Product &amp; UX</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
-    <tr><td>2</td><td><span class="fill">[Name]</span></td><td>AI / ML Engineer</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
-    <tr><td>3</td><td><span class="fill">[Name]</span></td><td>Backend, Integrations &amp; Security</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
-    <tr><td>4</td><td><span class="fill">[Name]</span></td><td>Frontend &amp; Quality</td><td><span class="fill">[…]</span></td><td><span class="fill">[…]</span></td></tr>
+    <tr><th style="width:30%">Field</th><th>Details</th></tr>
+    <tr><td>Team name</td><td><b>leisure</b></td></tr>
+    <tr><td>Team ID / registration no.</td><td>To be assigned by the organisers</td></tr>
+    <tr><td>Team size</td><td>1 (solo entry)</td></tr>
+    <tr><td>Participant</td><td><b>Sidharth Monangi</b>: owner of all workstreams (product &amp; UX, AI pipeline, backend &amp; security, frontend &amp; quality)</td></tr>
+    <tr><td>Email</td><td>sidharthmonangi@gmail.com</td></tr>
+    <tr><td>GitHub</td><td>github.com/SidharthMonangi</td></tr>
+    <tr><td>Project repository</td><td>github.com/SidharthMonangi/Codersinpune- (judge access from Round 2)</td></tr>
   </table>
 
   <!-- ======================= APPENDIX ======================= -->
   <h3 style="margin-top:8mm">Appendix A · Primary research plan</h3>
-  <p class="small">We're interviewing people on both sides of real handovers in Pune college clubs and small teams, and running a short survey. Results will be reported in Round 2.</p>
+  <p class="small">I'm interviewing people on both sides of real handovers in Pune college clubs and small teams, and running a short survey. Results will be reported in Round 2.</p>
   <div class="grid2">
     <div class="card soft"><h4>Interview guide (20 min)</h4><ul class="small" style="margin:0"><li>Tell us about the last time you took over (or handed over) a project.</li><li>What did you only find out <i>after</i> the previous person had left?</li><li>Where did the missing information actually turn out to be?</li><li>What would you never want shared with a successor or volunteer?</li><li>How long did it take until you felt confident making changes?</li></ul></div>
     <div class="card soft"><h4>Survey (target n ≥ 40)</h4><ul class="small" style="margin:0"><li>Weeks to feel productive after taking over (scale)</li><li>Hours the leaver spent on handover (scale)</li><li>Have you ever lost access to credentials, contacts or decisions? (Y/N + example)</li><li>Rank the most damaging losses: rationale, unfinished work, contacts, credentials, recurring issues</li><li>Would you trust an AI handover if every claim were cited and reviewed? (Likert)</li></ul></div>
   </div>
-  <div class="card amber small" style="margin-top:3mm"><b>Early findings:</b> <span class="fill">[Add interview count, survey n and 2–3 headline numbers or quotes before submission]</span></div>
+  <div class="card amber small" style="margin-top:3mm"><b>Status:</b> interviews and the survey are under way. Findings, including the number of respondents and any results that change the plan, will be reported in the Round 2 document.</div>
 
   <h3>Appendix B · References</h3>
   <p class="small" style="margin-bottom:1mm">[R1] Panopto (2018). <i>Workplace Knowledge and Productivity Report</i>: 42% of institutional knowledge is unique to the individual; 5.3 hours/week spent waiting for or recreating information. panopto.com</p>
@@ -652,7 +655,7 @@
   <p class="small" style="margin-bottom:1mm">[R3] Government of India (2023). <i>Digital Personal Data Protection Act, 2023</i>. meity.gov.in</p>
 
   <h3>Appendix C · Disclosure of AI and tools</h3>
-  <p class="small">AI assistance (Claude) was used to help structure and draft this planning document. All product decisions and research were reviewed by the team. In the build rounds we will use the open-source libraries and APIs listed in §6 under their licences, disclose any templates or boilerplate, and write no product code before the official build window.</p>
+  <p class="small">AI assistance (Claude) was used to help structure and draft this planning document. All product decisions and research were made and reviewed by the author. In the build rounds we will use the open-source libraries and APIs listed in §6 under their licences, disclose any templates or boilerplate, and write no product code before the official build window.</p>
 </div>
 
 </body>
