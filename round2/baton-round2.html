@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Baton: Round 2 Build</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 15mm 14mm; }
+  @page :first { margin: 0; }
+  :root{
+    --ink:#0E1A2B; --ink2:#334155; --mute:#64748B; --line:#E2E8F0; --bg:#F8FAFC;
+    --amber:#F59E0B; --amberd:#B45309; --amberl:#FEF3C7;
+    --ver:#15803D; --verl:#DCFCE7; --inf:#1D4ED8; --infl:#DBEAFE; --con:#C2410C; --conl:#FFEDD5;
+    --gap:#B91C1C; --gapl:#FEE2E2; --att:#6D28D9; --attl:#EDE9FE; --sea:#475569; --seal:#E2E8F0;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  body{font-family:Inter, "DejaVu Sans", sans-serif; color:var(--ink); font-size:8.9pt; line-height:1.42; margin:0}
+  h1,h2,h3,h4{font-family:"Inter Display",Inter,sans-serif; margin:0; letter-spacing:-0.01em}
+  h2{font-size:16.5pt; font-weight:800; margin:0 0 1.5mm}
+  h3{font-size:10.5pt; font-weight:700; margin:3.5mm 0 1.2mm}
+  h4{font-size:10pt; font-weight:700; margin:0 0 1mm}
+  p{margin:0 0 2.2mm}
+  ul{margin:0 0 2.5mm; padding-left:4.5mm} li{margin-bottom:0.8mm}
+  code,.mono{font-family:"JetBrains Mono",monospace; font-size:8.3pt}
+  .section{break-before:page}
+  .kicker{font-size:8pt; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--amberd); margin-bottom:1mm}
+  .lead{font-size:9.8pt; color:var(--ink2); line-height:1.45; margin-bottom:3mm}
+  .rule{height:3px; width:22mm; background:var(--amber); border-radius:2px; margin:0 0 3mm}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:4mm}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:3.5mm}
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:3mm}
+  .card{border:1px solid var(--line); border-radius:3mm; padding:2.8mm 3.4mm; background:#fff; break-inside:avoid}
+  .card.soft{background:var(--bg)}
+  .card.dark{background:var(--ink); color:#E2E8F0; border-color:var(--ink)}
+  .card.dark h4{color:#fff}
+  .card.amber{background:var(--amberl); border-color:#FCD34D}
+  .small{font-size:8pt; color:var(--ink2)}
+  .tiny{font-size:7.4pt; color:var(--mute)}
+  .stat{font-family:"Inter Display"; font-size:21pt; font-weight:800; color:var(--amberd); line-height:1}
+  table{width:100%; border-collapse:collapse; font-size:7.9pt; break-inside:auto}
+  th{background:var(--ink); color:#fff; text-align:left; padding:1.4mm 2mm; font-weight:600}
+  td{border-bottom:1px solid var(--line); padding:1.2mm 2mm; vertical-align:top}
+  tr{break-inside:avoid}
+  tr:nth-child(even) td{background:#FBFCFE}
+  .tag{display:inline-block; font-size:7.2pt; font-weight:700; padding:.3mm 1.8mm; border-radius:10mm; letter-spacing:.02em; white-space:nowrap}
+  .t-ver{background:var(--verl); color:var(--ver)} .t-inf{background:var(--infl); color:var(--inf)}
+  .t-con{background:var(--conl); color:var(--con)} .t-gap{background:var(--gapl); color:var(--gap)}
+  .t-att{background:var(--attl); color:var(--att)} .t-sea{background:var(--seal); color:var(--sea)}
+  .t-amb{background:var(--amberl); color:var(--amberd)}
+  .yes{color:var(--ver); font-weight:700} .no{color:#CBD5E1; font-weight:700} .part{color:var(--amberd); font-weight:700}
+  .cite{font-family:"JetBrains Mono"; font-size:7pt; background:#F1F5F9; color:#334155; border:1px solid #CBD5E1; border-radius:1mm; padding:0 1mm; white-space:nowrap}
+  .num{display:inline-flex; align-items:center; justify-content:center; width:6mm; height:6mm; border-radius:50%; background:var(--amber); color:var(--ink); font-weight:800; font-size:8.5pt; flex:none}
+  .fill{background:#FEF9C3; outline:1px dashed #CA8A04; padding:0 1mm; border-radius:1mm}
+  .quote{border-left:3px solid var(--amber); padding:1mm 0 1mm 4mm; font-size:10.5pt; color:var(--ink2); font-style:italic; margin:3mm 0}
+
+  /* ---------- cover ---------- */
+  .cover{height:297mm; width:210mm; background:var(--ink); color:#fff; position:relative; overflow:hidden; padding:22mm 20mm}
+  .cover .glow{position:absolute; right:-60mm; top:-40mm; width:190mm; height:190mm; border-radius:50%;
+     background:radial-gradient(circle, rgba(245,158,11,.35) 0%, rgba(245,158,11,0) 65%)}
+  .cover .brand{display:flex; align-items:center; gap:4mm}
+  .cover .logo{width:13mm; height:13mm}
+  .cover .event{font-size:9pt; letter-spacing:.18em; text-transform:uppercase; color:#FCD34D; font-weight:700}
+  .cover h1{font-size:64pt; font-weight:900; letter-spacing:-0.03em; margin-top:40mm; line-height:.95}
+  .cover .tagline{font-size:20pt; font-weight:300; color:#CBD5E1; margin-top:5mm; line-height:1.25; max-width:150mm}
+  .cover .tagline b{color:#fff; font-weight:700}
+  .cover .pillars{position:absolute; left:20mm; right:20mm; bottom:52mm; display:grid; grid-template-columns:repeat(3,1fr); gap:4mm}
+  .cover .pill{border:1px solid rgba(255,255,255,.18); border-radius:3mm; padding:4mm; background:rgba(255,255,255,.04)}
+  .cover .pill b{display:block; color:#FCD34D; font-size:10pt; margin-bottom:1mm}
+  .cover .pill span{font-size:8.6pt; color:#CBD5E1; line-height:1.4}
+  .cover .meta{position:absolute; left:20mm; right:20mm; bottom:20mm; display:flex; justify-content:space-between; font-size:9pt; color:#94A3B8; border-top:1px solid rgba(255,255,255,.15); padding-top:4mm}
+  .cover .meta b{color:#fff}
+
+  /* ---------- flow ---------- */
+  .flow{display:grid; grid-template-columns:repeat(7,1fr); gap:1.6mm; margin:3mm 0}
+  .step{background:var(--bg); border:1px solid var(--line); border-radius:2.5mm; padding:2.5mm 2mm; position:relative; break-inside:avoid}
+  .step .n{font-size:7pt; font-weight:800; color:var(--amberd); letter-spacing:.1em}
+  .step b{display:block; font-size:9.4pt; margin:.5mm 0 .8mm}
+  .step span{font-size:7.4pt; color:var(--ink2); line-height:1.35; display:block}
+  .step.req{border-top:3px solid var(--ink)}
+  .step.new{border-top:3px solid var(--amber); background:#FFFBEB}
+
+  /* ---------- mock UI ---------- */
+  .mock{border:1px solid #CBD5E1; border-radius:3mm; overflow:hidden; background:#fff; break-inside:avoid; box-shadow:0 1mm 4mm rgba(15,23,42,.08)}
+  .mock .bar{background:#0E1A2B; color:#fff; font-size:8pt; padding:1.8mm 3mm; display:flex; justify-content:space-between; align-items:center}
+  .mock .bar .dots i{display:inline-block; width:2mm; height:2mm; border-radius:50%; background:#475569; margin-right:1mm}
+  .mock .body{padding:3mm}
+  .claim{border:1px solid var(--line); border-left-width:3px; border-radius:2mm; padding:2mm 2.6mm; margin-bottom:2mm; font-size:8.3pt; break-inside:avoid}
+  .claim .h{display:flex; gap:1.5mm; align-items:center; margin-bottom:.8mm; flex-wrap:wrap}
+  .claim .type{font-size:6.8pt; font-weight:800; letter-spacing:.08em; color:var(--mute); text-transform:uppercase}
+  .claim .acts{margin-top:1.2mm; display:flex; gap:1.5mm}
+  .claim .acts span{font-size:6.8pt; border:1px solid #CBD5E1; border-radius:1mm; padding:0 1.5mm; color:#334155}
+  .claim.ver{border-left-color:var(--ver)} .claim.con{border-left-color:var(--con)} .claim.gap{border-left-color:var(--gap)}
+  .claim.att{border-left-color:var(--att)} .claim.sea{border-left-color:var(--sea); background:repeating-linear-gradient(45deg,#F8FAFC,#F8FAFC 2mm,#F1F5F9 2mm,#F1F5F9 4mm)}
+  .claim.inf{border-left-color:var(--inf)}
+
+  /* ---------- architecture ---------- */
+  .arch{display:grid; grid-template-columns:30mm 1fr; gap:2mm; font-size:8pt}
+  .arch .lab{background:var(--ink); color:#fff; border-radius:2mm; padding:2mm; font-weight:700; display:flex; align-items:center; font-size:7.8pt}
+  .arch .row{display:flex; gap:2mm}
+  .arch .box{flex:1; border:1px solid var(--line); background:var(--bg); border-radius:2mm; padding:1.8mm 2mm; line-height:1.3}
+  .arch .box b{display:block; font-size:8.2pt}
+  .arch .box.hl{background:#FFFBEB; border-color:#FCD34D}
+  .arch .box.sec{background:#FEF2F2; border-color:#FECACA}
+  .arrow{text-align:center; color:var(--mute); font-size:8pt; grid-column:2; line-height:1}
+
+  /* ---------- gantt ---------- */
+  .gantt{display:grid; grid-template-columns:44mm repeat(12,1fr); font-size:7.6pt; gap:.8mm 0; align-items:center}
+  .gantt .hd{font-weight:700; color:var(--mute); text-align:center; font-size:7pt}
+  .gantt .lbl{padding-right:2mm; grid-column:1; white-space:nowrap}
+  .gantt .b{height:4.2mm; border-radius:1.2mm}
+  .r1{background:#94A3B8}.r2{background:var(--amber)}.r3{background:var(--ink)}
+
+  .toc{columns:2; column-gap:8mm; font-size:9pt}
+  .toc div{display:flex; gap:2mm; margin-bottom:1.6mm; break-inside:avoid}
+  .toc .k{color:var(--amberd); font-weight:800; width:6mm}
+
+  .shot{border:1px solid #CBD5E1; border-radius:2.5mm; overflow:hidden; break-inside:avoid; margin:0 0 2mm}
+  .shot img{width:100%; display:block}
+  .cap{font-size:7.8pt; color:var(--mute); margin:0 0 3mm}
+  .ok{color:var(--ver); font-weight:800}
+  .kpi{display:grid; grid-template-columns:repeat(4,1fr); gap:3mm}
+  .kpi .card{text-align:left}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="glow"></div>
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="10" fill="#F59E0B"/><path d="M12 34 L30 16" stroke="#0E1A2B" stroke-width="6" stroke-linecap="round"/><circle cx="34" cy="14" r="5" fill="#0E1A2B"/><circle cx="12" cy="34" r="3" fill="#0E1A2B" opacity=".45"/></svg>
+    <div class="event">Coders in Pune · Knowledge Handover Challenge · Round 2: The Build</div>
+  </div>
+  <h1>Baton</h1>
+  <div class="tagline">The plan is now a <b>working product.</b><br>Evidence-linked, permission-aware handovers that a judge can open and use, with no walkthrough needed.</div>
+  <div class="pillars">
+    <div class="pill"><b>Live product</b><span>baton-handover-sigma.vercel.app<br>No sign-up. Click “Try the live demo”.</span></div>
+    <div class="pill"><b>Source code</b><span>github.com/SidharthMonangi/Codersinpune-<br>branch <i>round2-build</i>, folder <i>app/</i></span></div>
+    <div class="pill"><b>Measured, not claimed</b><span>10/10 automated tests · 0 of 20 permission checks leaked · full judge journey verified on the live site</span></div>
+  </div>
+  <div class="meta">
+    <div>Team <b>leisure</b> · Solo entry by <b>Sidharth Monangi</b></div>
+    <div>Submitted <b>November 2026</b></div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+  <div class="kicker">Submission at a glance</div>
+  <h2>Round 2 summary</h2>
+  <div class="rule"></div>
+  <table style="margin-bottom:4mm">
+    <tr><th style="width:26%">Required item</th><th>Where to find it</th></tr>
+    <tr><td>Working project link</td><td><b>https://baton-handover-sigma.vercel.app</b>. It opens without sign-in; each visitor gets a private workspace.</td></tr>
+    <tr><td>Source-code repository</td><td><b>https://github.com/SidharthMonangi/Codersinpune-</b> (branch <i>round2-build</i>; app in <i>app/</i>; README at the root)</td></tr>
+    <tr><td>Completed features</td><td>§1 (all 10 MVP features from the Round 1 plan, plus 4 extras)</td></tr>
+    <tr><td>Technology and implementation</td><td>§3 architecture and data flow, §4 implementation details, APIs, models, datasets and libraries</td></tr>
+    <tr><td>Changes to the original plan</td><td>§5, with the reason for each change</td></tr>
+    <tr><td>Testing evidence</td><td>§6: automated tests, end-to-end browser runs on the live site, mobile and security checks</td></tr>
+    <tr><td>Three Round 3 improvements</td><td>§7</td></tr>
+  </table>
+
+  <h3 style="margin-top:0">The 2-minute judge path</h3>
+  <div class="grid2">
+    <div class="card soft small"><b>1.</b> Open the link and click <b>Try the live demo → Open the Project Orion demo</b>. This is a synthetic student-club project: Priya (tech lead) leaves on 30 Nov and Arjun takes over.<br>
+    <b>2. Reconstruct &amp; verify:</b> click any grey citation chip to see the exact source, with shared words highlighted. Open <b>Conflicts</b> to see reversed decisions and unresolved disagreements.<br>
+    <b>3. Gap Interview:</b> set <i>Acting as</i> to <b>Priya Nair (leaver)</b> and answer one question. It becomes ATTESTED evidence and the Readiness Score rises.</div>
+    <div class="card soft small"><b>4. Review &amp; approve:</b> switch to <b>Dr. Anjali Kulkarni (approver)</b>, accept or edit claims, then approve. The version is hashed and frozen.<br>
+    <b>5. Handover:</b> compare <b>Arjun (Tech Lead)</b> and <b>Rohan (Volunteer)</b> side by side; Rohan sees 🔒 sealed placeholders. Create a link and open it in a private window to see the recipient's plan, unknowns, people to talk to, and acknowledgements.<br>
+    <b>Bring your own data:</b> start an empty workspace, then upload exports or connect any public GitHub repo. Sample files are on the Connect tab.</div>
+  </div>
+
+  <h3>Measured on the demo dataset (synthetic, with a planted answer key)</h3>
+  <div class="kpi">
+    <div class="card"><div class="stat">6/6</div><p class="tiny">planted decisions extracted, each with citations</p></div>
+    <div class="card"><div class="stat">3/3</div><p class="tiny">reversed decisions marked superseded (MongoDB→Postgres, OneSignal→email, weekly→biweekly)</p></div>
+    <div class="card"><div class="stat">2/2</div><p class="tiny">factual contradictions flagged (fest date 14 vs 15 Dec, registration cap 800 vs 1000)</p></div>
+    <div class="card"><div class="stat">0/20</div><p class="tiny">confidential-item leaks across 20 role × item checks (a test failure blocks the build)</p></div>
+  </div>
+  <div class="kpi" style="margin-top:3mm">
+    <div class="card"><div class="stat">5/5</div><p class="tiny">planted gaps raised as Gap Interview questions (webhook owner, migration 0009, SSO certificate, Razorpay contact, sole-knower areas)</p></div>
+    <div class="card"><div class="stat">10/10</div><p class="tiny">automated tests passing (leakage, redaction, conflicts, gaps, attestation access, citations, AI guard-rails, fallback)</p></div>
+    <div class="card"><div class="stat">38 s</div><p class="tiny">full judge journey run by a browser robot on the live site: 0 errors, 0 leaked strings in the volunteer view</p></div>
+    <div class="card"><div class="stat">49 ms</div><p class="tiny">to rebuild the project state from 11 sources and 96 evidence items (rule engine)</p></div>
+  </div>
+</div>
+
+<!-- 1 FEATURES -->
+<div class="section">
+  <div class="kicker">§1 · Completed features</div>
+  <h2>Every MVP feature from the Round 1 plan is working</h2>
+  <div class="rule"></div>
+  <table>
+    <tr><th style="width:5%">#</th><th style="width:24%">Feature</th><th>What works now</th><th style="width:9%">Status</th></tr>
+    <tr><td>F1</td><td><b>Handover workspace</b></td><td>A private workspace per visitor (secure cookie, no sign-up). Setup for the departing member, last day, recipients and roles, and people. An "Acting as" switch lets one tester play admin, leaver and approver.</td><td class="ok">Done</td></tr>
+    <tr><td>F2</td><td><b>Source ingestion</b></td><td>Parsers for Slack export JSON, Discord export JSON, GitHub export JSON, Markdown/TXT docs, meeting transcripts (.vtt, speaker-aware) and Trello/Jira CSVs. A live, read-only GitHub connector for any public repo (issues, PRs, commits). Each source has an access list and a sensitivity level.</td><td class="ok">Done</td></tr>
+    <tr><td>F3</td><td><b>Redaction gate</b></td><td>Removes API keys and tokens, passwords, JWTs, phone numbers, Aadhaar, PAN, card numbers and high-entropy strings <i>before</i> storage or any model call. Automatic sensitivity escalation for money, contracts and health.</td><td class="ok">Done</td></tr>
+    <tr><td>F4</td><td><b>Evidence Ledger</b></td><td>8 claim types, each linked to exact evidence items. Duplicates are merged; recurring problems are collapsed with a report count; a later decision on the same option slot supersedes the earlier one.</td><td class="ok">Done</td></tr>
+    <tr><td>F5</td><td><b>Verifier &amp; trust states</b></td><td>Each evidence link is checked against the statement it was extracted as. Trust states: Verified (2+ sources or an authoritative one), Inferred, Conflicting, Attested. Unsupported claims are dropped.</td><td class="ok">Done</td></tr>
+    <tr><td>F6</td><td><b>Timeline, ownership &amp; conflicts</b></td><td>Decision timeline including reversals, a who-owns-what map with unowned work highlighted, an area summary, and a side-by-side Conflicts view.</td><td class="ok">Done</td></tr>
+    <tr><td>F7</td><td><b>Gap detector + Gap Interview</b></td><td>Six gap kinds, ranked by risk using the Sole-Knower Index and urgency, capped at 15. Answer, Don't know, route to someone else, or skip. Answers become ATTESTED evidence that inherits the strictest access of what they answer.</td><td class="ok">Done</td></tr>
+    <tr><td>F8</td><td><b>Review screen</b></td><td>Accept, edit, reject or undo per claim; bulk-accept verified claims; approve as a named approver; version history with SHA-256 hash and diff counts; append-only audit log.</td><td class="ok">Done</td></tr>
+    <tr><td>F9</td><td><b>Role-based handover + Sealed Claims</b></td><td>Built on the server per recipient from the approved version. Day 1 / Week 1 / Month 1 plan, people to talk to, known unknowns, sealed placeholders grouped by area with who to ask, and a flag on work still owned by the leaver. Unguessable share links, acknowledgement of receipt and of each critical item, side-by-side role comparison.</td><td class="ok">Done</td></tr>
+    <tr><td>F10</td><td><b>Readiness Score</b></td><td>A live 0–100 score in the header, using the published formula (risk-weighted gaps closed + claims reviewed).</td><td class="ok">Done</td></tr>
+  </table>
+  <h3>Built beyond the plan</h3>
+  <div class="grid2">
+    <div class="card small"><b>Team knowledge radar.</b> The Sole-Knower Index for <i>every</i> member, per area, on the Overview. It shows where knowledge would be lost if any one person left today, so knowledge is captured while the work is happening, not only at resignation.</div>
+    <div class="card small"><b>Per-reader re-rendering.</b> If a claim's main wording came from a source the reader can't open, Baton shows the wording extracted from the reader's own permitted source instead, or seals the claim.</div>
+    <div class="card small"><b>AI engine with guard-rails (code-complete).</b> Gemini extraction with JSON-schema output, plus a separate per-link AI verifier. Claims citing non-existent evidence are dropped. On errors or rate limits it falls back to the rule engine and says so in the UI.</div>
+    <div class="card small"><b>Guided experience for judges.</b> A "Next step" banner, a progress checklist, an inline trust legend, sample files to download, and clear empty states and error messages.</div>
+  </div>
+</div>
+
+<!-- 2 WALKTHROUGH -->
+<div class="section">
+  <div class="kicker">§2 · The product, screen by screen</div>
+  <h2>From connected sources to an acknowledged handover</h2>
+  <div class="rule"></div>
+  <div class="grid2">
+    <div><div class="shot"><img src="img/overview.jpg"></div><p class="cap"><b>Overview.</b> Counts by trust state, the progress checklist, the highest-risk gaps, and the team knowledge radar (Sole-Knower Index per person × area).</p></div>
+    <div><div class="shot"><img src="img/evidence.jpg"></div><p class="cap"><b>Evidence drawer.</b> Every claim opens its exact sources, with shared words highlighted, author, date, access list and sensitivity.</p></div>
+    <div><div class="shot"><img src="img/conflicts.jpg"></div><p class="cap"><b>Conflicts.</b> Reversed decisions are marked superseded (the newer source wins); unresolved disagreements go to the Gap Interview.</p></div>
+    <div><div class="shot"><img src="img/timeline.jpg"></div><p class="cap"><b>Decision timeline.</b> How the project got here, including the decisions that were later reversed.</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="grid2">
+    <div><div class="shot"><img src="img/interview.jpg"></div><p class="cap"><b>Gap Interview.</b> Questions ranked by risk, each with why it was asked and its evidence. Answers become ATTESTED evidence and Readiness rises.</p></div>
+    <div><div class="shot"><img src="img/review.jpg"></div><p class="cap"><b>Review &amp; approve.</b> Accept, edit or reject per claim, then approve as a named person. Versions are hashed and frozen.</p></div>
+    <div><div class="shot"><img src="img/compare.jpg"></div><p class="cap"><b>Role comparison.</b> Same approved version: the Tech Lead sees 52 items; the Volunteer sees 18, plus sealed placeholders.</p></div>
+    <div><div class="shot"><img src="img/recipient-arjun.jpg"></div><p class="cap"><b>Recipient view.</b> Continuation plan, people to talk to, acknowledgements, and a jump navigation.</p></div>
+    <div><div class="shot"><img src="img/recipient-sealed.jpg"></div><p class="cap"><b>Known unknowns and sealed items.</b> Baton lists what it doesn't know instead of guessing; sealed content is removed on the server.</p></div>
+    <div><div class="shot"><img src="img/audit.jpg"></div><p class="cap"><b>Audit log.</b> Every connection, run, answer, edit, approval and share, with who did it and when.</p></div>
+  </div>
+</div>
+
+<!-- 3 ARCHITECTURE -->
+<div class="section">
+  <div class="kicker">§3 · Architecture and data flow</div>
+  <h2>How a source item becomes a line in someone's handover</h2>
+  <div class="rule"></div>
+  <div class="arch" style="margin-bottom:4mm">
+    <div class="lab">Sources</div>
+    <div class="row"><div class="box"><b>Uploads</b>Slack / Discord JSON · MD/TXT · VTT · CSV</div><div class="box"><b>GitHub connector</b>public repo: issues, PRs, commits (read-only)</div><div class="box"><b>Demo</b>Project Orion: 11 synthetic sources</div></div>
+    <div class="arrow">▼ parse (src/lib/ingest.ts)</div>
+    <div class="lab">Ingest &amp; protect</div>
+    <div class="row"><div class="box"><b>Evidence units</b>text · author · time · locator · URI · area</div><div class="box"><b>Access</b>source ACL groups + sensitivity on every unit</div><div class="box sec"><b>Redaction gate</b>runs before storage and before any model (src/lib/redact.ts)</div></div>
+    <div class="arrow">▼ reason (src/lib/pipeline.ts, src/lib/ai.ts)</div>
+    <div class="lab">Reasoning</div>
+    <div class="row"><div class="box hl"><b>Extract</b>rule engine, or Gemini (JSON schema)</div><div class="box hl"><b>Resolve</b>merge · supersede · conflicts</div><div class="box hl"><b>Verify</b>per-link check → trust state</div><div class="box hl"><b>Gaps</b>SKI · risk ranking · questions</div></div>
+    <div class="arrow">▼ human control (src/lib/ops.ts)</div>
+    <div class="lab">Human control</div>
+    <div class="row"><div class="box"><b>Gap Interview</b>attested evidence</div><div class="box"><b>Review</b>accept / edit / reject</div><div class="box"><b>Approve</b>hashed, frozen version</div><div class="box"><b>Audit log</b>append-only</div></div>
+    <div class="arrow">▼ compile per reader (server only)</div>
+    <div class="lab">Handover</div>
+    <div class="row"><div class="box sec"><b>Visibility rule</b>visible sources · re-verify · clearance</div><div class="box"><b>Compiled handover</b>plan · people · unknowns · sealed</div><div class="box"><b>Share token</b>28 chars, stored compiled</div><div class="box"><b>Recipient page</b>server-rendered · acknowledgements</div></div>
+  </div>
+  <h3>Key technical decisions</h3>
+  <table>
+    <tr><th style="width:30%">Decision</th><th>Why</th></tr>
+    <tr><td>Compile every handover <b>on the server</b>, per reader, and store only the compiled result behind the share token</td><td>Sealed content never reaches the reader's browser. Permissions are enforced on the output, not just on retrieval.</td></tr>
+    <tr><td>Storage through <b>database functions only</b> (Supabase RLS with no policies + SECURITY DEFINER RPCs)</td><td>The public key can't read or write any table directly. Every call needs the workspace secret (stored as a SHA-256 hash) or a share token. Tested: a wrong secret returns null; a direct table read returns <i>permission denied</i>.</td></tr>
+    <tr><td><b>Two extraction engines</b> behind one pipeline</td><td>The rule engine is deterministic, free and instant, and it keeps the demo working with no AI quota. Gemini adds better paraphrasing when a key is configured. Both go through the same resolver, verifier, trust rules and permission checks.</td></tr>
+    <tr><td><b>Verify each evidence link separately</b></td><td>This lets Baton re-check a claim against <i>only</i> the sources a given reader can open, which is the core of Sealed Claims.</td></tr>
+    <tr><td>A synthetic dataset <b>with a planted answer key</b></td><td>The brief requires synthetic data for demos. An answer key turns "it seems to work" into measurable recall and leakage tests that run in CI.</td></tr>
+    <tr><td>Workspace per visitor, <b>no sign-up</b></td><td>Judges must be able to use the product without assistance. Each judge gets an isolated copy of the demo, so testers can't interfere with each other.</td></tr>
+  </table>
+</div>
+
+<!-- 4 IMPLEMENTATION -->
+<div class="section">
+  <div class="kicker">§4 · Implementation details</div>
+  <h2>Models, rules and the permission logic</h2>
+  <div class="rule"></div>
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:0">The visibility rule (src/lib/ops.ts)</h3>
+      <div class="card amber small" style="font-family:'JetBrains Mono'; font-size:7.6pt">E<sub>r</sub> = {links of c whose evidence r can open (ACL ∩ groups ≠ ∅ and sensitivity ≤ clearance)}<br>visible(c, r) ⇔ ∃ supporting link in E<sub>r</sub><br>&nbsp;&nbsp;∧ c's wording is supported by E<sub>r</sub> alone (else re-render from E<sub>r</sub>'s own statement)<br>&nbsp;&nbsp;∧ sensitivity(text) ≤ clearance(r)<br>otherwise → SEALED (or withheld if Restricted)</div>
+      <p class="small">Gap questions are shown to a reader only if <i>all</i> of their linked claims are visible to that reader, because a question can leak content too.</p>
+      <h3>Scores</h3>
+      <div class="card soft mono" style="font-size:7.4pt; line-height:1.5">SKI(area) = Σ w(e)·[author=leaver] / Σ w(e), w = e<sup>−age/90d</sup><br>gap risk = base(kind) × (0.6 + 0.4·SKI) × urgency<br>Readiness = 100 × (0.7 × risk-weighted gaps closed + 0.3 × claims reviewed)</div>
+      <h3>Trust states</h3>
+      <p class="small"><b>Verified</b>: a supporting link scores ≥ 0.5 and comes from 2+ sources, or from an authoritative source (repo, doc, task board, attestation), or is an explicit decision. <b>Inferred</b>: one informal source. <b>Conflicting</b>: an unresolved contradiction, or superseded. <b>Attested</b>: Gap Interview answer. Claims with no support are dropped.</p>
+    </div>
+    <div>
+      <h3 style="margin-top:0">APIs, models, datasets, libraries, services</h3>
+      <table>
+        <tr><th style="width:36%">Component</th><th>Use</th></tr>
+        <tr><td>Next.js 15 · React 19 · TypeScript</td><td>Web app, API routes, server-rendered recipient pages</td></tr>
+        <tr><td>Tailwind CSS 4</td><td>UI styling (no component template used)</td></tr>
+        <tr><td>Supabase Postgres</td><td>Storage: RLS + 7 RPC functions, pgcrypto for secret hashing (Mumbai region)</td></tr>
+        <tr><td>Vercel</td><td>Hosting (Mumbai region), production deploys from GitHub</td></tr>
+        <tr><td>GitHub REST API</td><td>Live read-only repository connector</td></tr>
+        <tr><td>Google Gemini API (gemini-2.5-flash, free tier)</td><td>Optional AI extraction and per-link verification, with JSON-schema output. Enabled by setting <i>GEMINI_API_KEY</i></td></tr>
+        <tr><td>Project Orion dataset</td><td>Synthetic, written for this project: 11 files, 96 evidence items, planted answer key</td></tr>
+        <tr><td>Node test runner · tsx · Playwright</td><td>Unit/integration tests; browser end-to-end runs</td></tr>
+        <tr><td>GitHub Actions</td><td>CI: tests, then type-check, lint and build on every push</td></tr>
+        <tr><td>Claude (AI coding assistant)</td><td>Used during development, as permitted and disclosed</td></tr>
+      </table>
+      <h3>Prompt-injection defence</h3>
+      <p class="small">Source text is passed to the model as quoted JSON data with an explicit "data, not instructions" system rule. The model has no tools, and its output must match a schema and cite real evidence IDs. Visibility is decided by code and the database, never by the model.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 5 CHANGES -->
+<div class="section">
+  <div class="kicker">§5 · Changes from the Round 1 plan</div>
+  <h2>What changed, and why</h2>
+  <div class="rule"></div>
+  <table>
+    <tr><th style="width:24%">Round 1 plan</th><th style="width:26%">Round 2 build</th><th>Reason</th></tr>
+    <tr><td>Next.js front end + FastAPI (Python) back end + Redis workers</td><td><b>One Next.js app</b> (UI + API routes)</td><td>A solo builder with 72 hours: one language, one deploy, half the moving parts. Ingestion of the demo project takes 49 ms, so no queue is needed yet.</td></tr>
+    <tr><td>Claude API for extraction and verification</td><td><b>Gemini free tier</b> (optional) + <b>rule engine</b></td><td>Zero cost during judging. The rule engine keeps the product working with no key or when the free-tier quota runs out, and it is honestly labelled in the UI.</td></tr>
+    <tr><td>Microsoft Presidio for PII</td><td><b>Regex + entropy redaction gate</b></td><td>Presidio needs a Python service. The gate covers the PII and secret types relevant to Indian student teams (phone, Aadhaar, PAN, cards, API keys, passwords) and is unit-tested.</td></tr>
+    <tr><td>Sign-in with Google/GitHub OAuth</td><td><b>Private workspace per visitor</b> + unguessable share links</td><td>The Round 2 rules require judges to use the product without sign-in. Real identity moves to Round 3 (§7).</td></tr>
+    <tr><td>pgvector embeddings for de-duplication</td><td><b>Token-overlap and option-slot matching</b></td><td>Deterministic and explainable at this data size. Embeddings return with the AI engine at scale.</td></tr>
+    <tr><td>Render/Railway for the API</td><td><b>Vercel only</b>, functions in Mumbai</td><td>Co-located with the Supabase database (ap-south-1) for low latency.</td></tr>
+    <tr><td>Team knowledge view as future scope</td><td><b>Built now</b> (Team knowledge radar)</td><td>The organisers' Round 2 brief stresses capturing knowledge "while the work is happening". The Sole-Knower Index for every member does that.</td></tr>
+  </table>
+  <p class="small" style="margin-top:3mm">The core workflow, evidence model, trust states, Gap Interview, Sealed Claims rule, Readiness formula and demo dataset are exactly as specified in Round 1.</p>
+</div>
+
+<!-- 6 TESTING -->
+<div class="section">
+  <div class="kicker">§6 · Testing evidence</div>
+  <h2>Tested like it has to be trusted</h2>
+  <div class="rule"></div>
+  <h3 style="margin-top:0">Automated tests (app/tests, run in CI on every push): 10/10 passing</h3>
+  <table>
+    <tr><th style="width:44%">Test</th><th>What it proves</th></tr>
+    <tr><td>Confidential items never reach roles without clearance</td><td>Sponsorship amount, welfare note, password and phone number stay out of every unauthorised role's compiled handover (20 role × item checks)</td></tr>
+    <tr><td>Cleared roles still see what they're allowed to see</td><td>The permission system isn't simply hiding everything</td></tr>
+    <tr><td>Secrets and PII are redacted before storage</td><td>No planted secret appears in any stored evidence</td></tr>
+    <tr><td>Planted decisions, reversals and conflicts are detected</td><td>6/6 decisions, 3/3 supersessions, 2/2 contradictions</td></tr>
+    <tr><td>Unowned work and sole-knower areas become questions</td><td>5/5 planted gaps appear in the Gap Interview</td></tr>
+    <tr><td>Attested answers inherit the strictest access</td><td>An answer can't leak what it answers about</td></tr>
+    <tr><td>Parsers reject bad files with clear messages</td><td>Unsupported types and broken JSON fail safely</td></tr>
+    <tr><td>Every shared claim has a citation the reader can open</td><td>No uncited statement ever reaches a recipient</td></tr>
+    <tr><td>AI path: invented citations are dropped; AI claims respect access</td><td>Stubbed Gemini returns a fake evidence ID and a leads-only fact; the first is discarded and the second never reaches the volunteer</td></tr>
+    <tr><td>AI failure falls back to the rule engine and says so</td><td>A 429 rate limit still yields a full ledger, with a visible note</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:3mm">
+    <div class="card small"><h4>End-to-end on the live site</h4>A Playwright robot ran the full judge journey on the production URL: demo → evidence drawer → conflicts → two answers and one "don't know" as Priya → bulk-accept and approve as Dr. Kulkarni → three share links → acknowledgements → volunteer link opened in a fresh browser with no cookies. <b>38 seconds, 0 console errors, 0 leaked strings.</b></div>
+    <div class="card small"><h4>Security and device checks</h4>Wrong workspace secret → <i>null</i>; direct table read with the public key → <i>permission denied</i>; GitHub push protection caught a fake key in an early version of the demo data, which was replaced. iPhone 13 emulation: no horizontal scroll on any tab after a layout fix.</div>
+  </div>
+  <h3>Known limitations (stated honestly)</h3>
+  <ul class="small">
+    <li>The rule engine catches clearly worded statements; implicit knowledge is missed or labelled Inferred. The AI engine improves recall but is limited by the free-tier rate.</li>
+    <li>Access lists for uploaded files are set by the uploader. Mirroring permissions automatically from the source system is Round 3 work (§7).</li>
+    <li>Workspaces are tied to one browser (cookie). Anyone holding a share link can open that one compiled handover, which never contains sealed content.</li>
+    <li>Precision has been spot-checked by hand but not formally measured yet. A labelled precision benchmark is part of Round 3.</li>
+  </ul>
+</div>
+
+<!-- 7 ROUND 3 -->
+<div class="section">
+  <div class="kicker">§7 · Three major improvements committed for Round 3</div>
+  <h2>From a one-off handover to always-ready continuity</h2>
+  <div class="rule"></div>
+  <div class="card" style="margin-bottom:3mm">
+    <h4><span class="num">1</span>&nbsp; Ask Baton: evidence-grounded Q&amp;A for the incoming person</h4>
+    <p class="small">After the handover, the newcomer asks questions in plain language ("why is the webhook not idempotent?"). Answers are generated <b>only</b> from the approved handover and the sources that reader is permitted to see, with citations on every sentence. When the evidence isn't there, Baton says <i>"not in evidence"</i> and routes the question to the most likely owner. Their reply comes back as attested knowledge, so the handover keeps improving after the leaver has gone.<br>
+    <b>Done when:</b> answers carry citations; there are zero answers from outside the reader's permitted sources (CI test); and the "not in evidence" rate on a 30-question test set is reported.</p>
+  </div>
+  <div class="card" style="margin-bottom:3mm">
+    <h4><span class="num">2</span>&nbsp; Living handover: live connectors, continuous capture and stale-handover alerts</h4>
+    <p class="small">Live Slack/Discord and GitHub connections (OAuth + webhooks) with incremental sync, so the ledger updates <b>while the work happens</b>. A drift detector compares new activity with the last approved version and alerts the owner, for example: "v3 is stale: 4 claims changed, 1 new conflict". Each person's readiness is then always current, before anyone resigns.<br>
+    <b>Done when:</b> a new message or PR appears in the ledger within a minute; a planted reversal triggers a stale alert; and re-approval produces a version diff.</p>
+  </div>
+  <div class="card">
+    <h4><span class="num">3</span>&nbsp; Verified identity and mirrored permissions</h4>
+    <p class="small">Sign-in with Google or GitHub for admins, leavers, approvers and recipients. Share links additionally require the recipient's verified identity. Access lists are <b>imported automatically</b> from the source systems (GitHub collaborators and teams, Slack channel membership) instead of being set by the uploader, and are re-checked at compile time. Combined with the AI engine, this closes the main gap between the demo and real organisational use.<br>
+    <b>Done when:</b> a recipient can't open someone else's link; a user removed from a Slack channel loses those claims on the next compile (CI test); and an admin can see who accessed what.</p>
+  </div>
+  <p class="small" style="margin-top:3mm">These are product capabilities, not cosmetic changes. Each is measurable, and each extends one of the three success criteria in the brief: traceable (1), actionable (2), permission-aware (3).</p>
+</div>
+
+<!-- TEAM -->
+<div class="section">
+  <div class="kicker">Team and disclosure</div>
+  <h2>Team leisure</h2>
+  <div class="rule"></div>
+  <table style="margin-bottom:4mm">
+    <tr><th style="width:30%">Field</th><th>Details</th></tr>
+    <tr><td>Team</td><td><b>leisure</b> (solo entry)</td></tr>
+    <tr><td>Participant</td><td><b>Sidharth Monangi</b>: product, AI pipeline, back end and security, front end, testing, deployment, documentation</td></tr>
+    <tr><td>Email</td><td>sidharthmonangi@gmail.com</td></tr>
+    <tr><td>Live product</td><td>https://baton-handover-sigma.vercel.app</td></tr>
+    <tr><td>Repository</td><td>https://github.com/SidharthMonangi/Codersinpune- (branch round2-build)</td></tr>
+  </table>
+  <h3>Disclosure</h3>
+  <p class="small">All product code was written during the official Round 2 build window (from 8 Nov 2026, 10:00 IST); the commit history shows this. No templates or boilerplate were used beyond the standard <i>create-next-app</i> scaffold. AI assistance (Claude) was used for coding and drafting, as the rules permit. All demo data is synthetic and was written for this project; any resemblance to real people or organisations is coincidental. Third-party libraries are used under their licences (see app/package.json).</p>
+</div>
+
+</body>
+</html>
