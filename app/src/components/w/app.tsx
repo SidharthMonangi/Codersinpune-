@@ -175,8 +175,8 @@ export function WorkspaceApp() {
                 {(
                   [
                     ["admin", "Admin"],
-                    ["leaver", `${(personName(ws, ws.leaverId) || "Leaver").split(" ")[0]} · leaver`],
-                    ["approver", `${approverName.replace(/^Dr\.\s*/, "Dr. ").split(" ").slice(0, 2).join(" ")} · approver`],
+                    ["leaver", ws.leaverId ? `${personName(ws, ws.leaverId).split(" ")[0]} · leaver` : "Leaver"],
+                    ["approver", approverName !== "Approver" ? `${approverName.split(" ").slice(0, 2).join(" ")} · approver` : "Approver"],
                   ] as const
                 ).map(([k, l]) => (
                   <button key={k} onClick={() => setActorMode(k)} className={`rounded-full px-3 py-1 transition ${actorMode === k ? "bg-ink text-paper shadow-sm" : "text-ink2 hover:text-ink"}`}>

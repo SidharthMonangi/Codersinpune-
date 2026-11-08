@@ -1,4 +1,5 @@
 "use client";
+import { fmtDateTime } from "@/lib/util";
 import { useMemo } from "react";
 import { soleKnower } from "@/lib/pipeline";
 import { Btn, Card, Help, TrustBadge } from "@/components/ui";
@@ -71,7 +72,7 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
           </div>
           <div className="mt-3 text-xs text-mute">
             Engine: {ws.engine.mode === "ai" ? `AI extraction (${ws.engine.model}) + independent AI verifier` : "rule-based extraction + lexical verifier (deterministic, no AI quota needed)"}
-            {ws.engine.lastRunAt ? ` · last run ${new Date(ws.engine.lastRunAt).toLocaleString("en-IN")}` : ""}
+            {ws.engine.lastRunAt ? ` · last run ${fmtDateTime(ws.engine.lastRunAt)}` : ""}
             {!ai ? " · AI engine not configured on this server" : ""}
             {ws.engine.note ? <div className="text-amberd">{ws.engine.note}</div> : null}
           </div>

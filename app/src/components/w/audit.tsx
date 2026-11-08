@@ -1,4 +1,5 @@
 "use client";
+import { fmtDateTime } from "@/lib/util";
 import { Btn, Card } from "@/components/ui";
 import { useWs } from "./ctx";
 
@@ -12,7 +13,7 @@ export function Audit({ onReset }: { onReset: () => void }) {
         <ul className="mt-3 divide-y divide-rule/60 text-sm">
           {ws.audit.map((a, i) => (
             <li key={i} className="py-1.5">
-              <span className="font-mono text-xs text-mute">{new Date(a.at).toLocaleString("en-IN")}</span> · <b>{a.actor}</b> · {a.action}
+              <span className="font-mono text-xs text-mute">{fmtDateTime(a.at)}</span> · <b>{a.actor}</b> · {a.action}
               {a.detail ? <div className="text-xs text-ink2">{a.detail}</div> : null}
             </li>
           ))}

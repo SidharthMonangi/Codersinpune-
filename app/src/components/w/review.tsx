@@ -1,4 +1,5 @@
 "use client";
+import { fmtDateTime } from "@/lib/util";
 import { useState } from "react";
 import { CLAIM_TYPES, type Claim } from "@/lib/types";
 import { Btn, Card, Empty, Help } from "@/components/ui";
@@ -80,7 +81,7 @@ export function Review() {
                   <li key={x.id} className="rounded-md bg-paper/60 px-2 py-1.5">
                     <b>v{x.n}</b> · <span className="font-mono text-xs">{x.hash}</span> · by {x.approvedBy}
                     <div className="text-xs text-mute">
-                      {new Date(x.at).toLocaleString("en-IN")} · {x.claimCount} claims · readiness {x.readiness} · +{added} / −{removed} vs previous
+                      {fmtDateTime(x.at)} · {x.claimCount} claims · readiness {x.readiness} · +{added} / −{removed} vs previous
                     </div>
                   </li>
                 );

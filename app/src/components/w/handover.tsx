@@ -1,4 +1,5 @@
 "use client";
+import { fmtDateTime } from "@/lib/util";
 import { useEffect, useState } from "react";
 import type { CompiledHandover } from "@/lib/types";
 import { personName } from "@/lib/people";
@@ -65,7 +66,7 @@ export function Handover() {
                   <b>{personName(ws, r.personId)}</b> <span className="text-mute">as {ws.roles.find((x) => x.id === r.roleId)?.label}</span>
                   {latest ? (
                     <div className="mt-0.5 text-xs text-mute">
-                      v{latest.versionN} shared {new Date(latest.createdAt).toLocaleString("en-IN")} · {ack.some((a) => a.claimId === "__all__") ? "✓ receipt acknowledged" : "not yet acknowledged"} · {ack.filter((a) => a.claimId !== "__all__").length} critical items acknowledged
+                      v{latest.versionN} shared {fmtDateTime(latest.createdAt)} · {ack.some((a) => a.claimId === "__all__") ? "✓ receipt acknowledged" : "not yet acknowledged"} · {ack.filter((a) => a.claimId !== "__all__").length} critical items acknowledged
                       {latest.versionN < v.n ? <span className="ml-1 font-semibold text-amberd">(older version: share again)</span> : null}
                     </div>
                   ) : null}

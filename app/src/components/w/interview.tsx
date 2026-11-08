@@ -1,4 +1,5 @@
 "use client";
+import { fmtDateTime } from "@/lib/util";
 import { useState } from "react";
 import type { Gap } from "@/lib/types";
 import { personName } from "@/lib/people";
@@ -136,7 +137,7 @@ function GapCard({ g, n }: { g: Gap; n?: number }) {
           <div>
             {g.status === "answered" ? (
               <>
-                <b>Answer:</b> {g.answer} <span className="text-xs text-mute">({g.answeredBy}, {g.answeredAt ? new Date(g.answeredAt).toLocaleDateString("en-IN") : ""})</span>
+                <b>Answer:</b> {g.answer} <span className="text-xs text-mute">({g.answeredBy}, {fmtDateTime(g.answeredAt)})</span>
               </>
             ) : g.status === "reassigned" ? (
               <>Routed to <b>{g.reassignedTo}</b></>

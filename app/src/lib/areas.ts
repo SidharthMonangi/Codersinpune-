@@ -3,8 +3,8 @@
 const AREAS: { area: string; re: RegExp }[] = [
   { area: "Payments", re: /\b(payment|razorpay|stripe|refund|webhook|upi|charge|kyc)/i },
   { area: "Auth & SSO", re: /\b(sso|login|auth|certificate|saml)/i },
-  { area: "CI & deploys", re: /\b(deploy|ci\b|github actions|runner|pipeline|release)/i },
   { area: "Database", re: /\b(database|postgres|supabase|firebase|mongodb|migration|schema|seed)/i },
+  { area: "CI & deploys", re: /\b(deploy|ci\b|github actions|runner|pipeline|release)/i },
   { area: "Notifications", re: /\b(notification|onesignal|reminder|email service)/i },
   { area: "Check-in", re: /\b(check-?in|qr|nfc|scanner|wristband)/i },
   { area: "Sponsors & finance", re: /\b(sponsor|nimbus|budget|instalment|invoice|amount|usage report)/i },

@@ -240,7 +240,8 @@ export async function fetchGitHub(repoInput: string): Promise<ParsedSource> {
   const get = async (path: string) => {
     const r = await fetch(`https://api.github.com/repos/${repo}${path}`, { headers, cache: "no-store" });
     if (r.status === 404) throw new Error(`Repository ${repo} not found or not public`);
-    if (r.status === 403) throw new Error("GitHub rate limit reached for this server. Try again later, or upload a GitHub export file instead.");
+    if (r.status === 403 || r.status === 429) throw new Error("GitHub's rate limit for this server has been reached. Try again in a few minutes, or upload a GitHub export (.json) instead.");
+    if (r.status === 401) throw new Error("GitHub refused the request (authentication). Try again shortly, or upload a GitHub export (.json) instead.");
     if (!r.ok) throw new Error(`GitHub returned ${r.status}`);
     return r.json();
   };
