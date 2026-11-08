@@ -6,7 +6,7 @@ export function Audit({ onReset }: { onReset: () => void }) {
   const { ws } = useWs();
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <Card className="lg:col-span-2">
+      <Card className="min-w-0 lg:col-span-2">
         <h2 className="font-bold">Audit log</h2>
         <p className="text-sm text-ink2">Every connection, extraction run, answer, edit, approval and share is recorded here, with who did it and when.</p>
         <ul className="mt-3 divide-y divide-slate-100 text-sm">

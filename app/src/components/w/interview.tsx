@@ -25,7 +25,7 @@ export function Interview() {
   const leaver = personName(ws, ws.leaverId) || "the departing member";
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <div className="space-y-3 lg:col-span-2">
+      <div className="min-w-0 space-y-3 lg:col-span-2">
         <Help>
           <b>For {leaver}:</b> Baton found {ws.gaps.length} things the sources can&apos;t explain and ranked them by risk. Answering takes about {Math.max(5, open.length * 2)} minutes instead of writing a handover from scratch.
           Each answer is stored as <b>ATTESTED</b> evidence, with your name and the date, and it inherits the access level of the evidence it&apos;s about.

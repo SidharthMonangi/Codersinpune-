@@ -17,7 +17,7 @@ export function Review() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <div className="space-y-3 lg:col-span-2">
+      <div className="min-w-0 space-y-3 lg:col-span-2">
         <Help>
           A responsible person checks every claim before anything is shared: <b>accept</b>, <b>edit</b> (the original wording stays in the audit log) or <b>reject</b> (rejected claims are never shared).
           Then they approve a version, which is hashed and frozen. Recipients only ever see approved versions.

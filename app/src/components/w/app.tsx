@@ -154,7 +154,7 @@ export function WorkspaceApp() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="w-44">
               <Meter value={ready} label="Handover readiness" />
             </div>

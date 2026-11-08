@@ -28,7 +28,7 @@ export function Connect() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-5">
-      <div className="space-y-4 lg:col-span-3">
+      <div className="min-w-0 space-y-4 lg:col-span-3">
         <Card>
           <h2 className="font-bold">1 · Connect authorised sources</h2>
           <p className="mt-1 text-sm text-ink2">
@@ -131,7 +131,7 @@ export function Connect() {
         </Card>
       </div>
 
-      <div className="lg:col-span-2">
+      <div className="min-w-0 lg:col-span-2">
         <Setup newPerson={newPerson} setNewPerson={setNewPerson} />
       </div>
     </div>

@@ -24,7 +24,7 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
 
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <div className="space-y-4 lg:col-span-2">
+      <div className="min-w-0 space-y-4 lg:col-span-2">
         {ws.demo ? (
           <Help>
             <b>Welcome, judge 👋</b> This is <b>Project Orion</b>, a synthetic student-club project. <b>Priya</b> (tech lead) leaves on 30 Nov and <b>Arjun</b> takes over.
@@ -99,7 +99,7 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
         </Card>
       </div>
 
-      <div className="space-y-4">
+      <div className="min-w-0 space-y-4">
         <Card>
           <h2 className="font-bold">Handover progress</h2>
           <ol className="mt-2 space-y-2">
