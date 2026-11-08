@@ -343,12 +343,13 @@
     <tr><td>AI failure falls back to the rule engine and says so</td><td>A 429 rate limit still yields a full ledger, with a visible note</td></tr>
   </table>
   <div class="grid2" style="margin-top:3mm">
-    <div class="card small"><h4>End-to-end on the live site</h4>A Playwright robot ran the full judge journey on the production URL: demo → evidence drawer → conflicts → two answers and one "don't know" as Priya → bulk-accept and approve as Dr. Kulkarni → three share links → acknowledgements → volunteer link opened in a fresh browser with no cookies. <b>38 seconds, 0 console errors, 0 leaked strings.</b></div>
+    <div class="card small"><h4>End-to-end on the live site</h4>A Playwright robot ran the full judge journey on the production URL: demo → evidence drawer → conflicts → two answers and one "don't know" as Priya → bulk-accept and approve as Dr. Kulkarni → three share links → acknowledgements → volunteer link opened in a fresh browser with no cookies. <b>38 seconds, 0 console errors, 0 leaked strings.</b> A second run tested the bring-your-own-data path on the live site: an empty workspace, the public repo <i>vercel/ms</i> through the GitHub connector, two uploaded files, then reconstruct and approve. Result: 30 cited claims and 14 Gap Interview questions, with no errors.</div>
     <div class="card small"><h4>Security and device checks</h4>Wrong workspace secret → <i>null</i>; direct table read with the public key → <i>permission denied</i>; GitHub push protection caught a fake key in an early version of the demo data, which was replaced. iPhone 13 emulation: no horizontal scroll on any tab after a layout fix.</div>
   </div>
   <h3>Known limitations (stated honestly)</h3>
   <ul class="small">
     <li>The rule engine catches clearly worded statements; implicit knowledge is missed or labelled Inferred. The AI engine improves recall but is limited by the free-tier rate.</li>
+    <li>Topic areas (used for the Sole-Knower Index) come from a keyword classifier tuned on the demo domain. On unfamiliar repositories they are coarser until the AI engine is enabled.</li>
     <li>Access lists for uploaded files are set by the uploader. Mirroring permissions automatically from the source system is Round 3 work (§7).</li>
     <li>Workspaces are tied to one browser (cookie). Anyone holding a share link can open that one compiled handover, which never contains sealed content.</li>
     <li>Precision has been spot-checked by hand but not formally measured yet. A labelled precision benchmark is part of Round 3.</li>
