@@ -146,7 +146,7 @@ export function extractRules(ws: Workspace, units: EvidenceUnit[]): Claim[] {
     return {
       id: uid("cl_"),
       type,
-      text: text.replace(/\s+/g, " ").trim(),
+      text: (() => { const t = text.replace(/\s+/g, " ").trim(); return t.charAt(0).toUpperCase() + t.slice(1); })(),
       area: a !== "General" ? a : u.area,
       evidence: [{ evidenceId: u.id, relation: "supports", score: 0 }],
       trust: "inferred",
@@ -176,7 +176,8 @@ export function resolve(claims: Claim[], ev: Map<string, EvidenceUnit>): Claim[]
       return j >= 0.42;
     });
     if (dup) {
-      for (const e of c.evidence) if (!dup.evidence.some((x) => x.evidenceId === e.evidenceId)) dup.evidence.push(e);
+      for (const e of dup.evidence) e.basis ??= dup.text;
+      for (const e of c.evidence) if (!dup.evidence.some((x) => x.evidenceId === e.evidenceId)) dup.evidence.push({ ...e, basis: e.basis ?? c.text });
       dup.owner ??= c.owner;
       dup.due ??= c.due;
       dup.rationale = dup.rationale || c.rationale;
@@ -209,7 +210,8 @@ export function resolve(claims: Claim[], ev: Map<string, EvidenceUnit>): Claim[]
       if (!tb || tb.cat !== ta.cat) continue;
       if (tb.opt === ta.opt) {
         if (ts(b) - ts(a) < 45 * 86400000) {
-          for (const e of b.evidence) if (!a.evidence.some((x) => x.evidenceId === e.evidenceId)) a.evidence.push(e);
+          for (const e of a.evidence) e.basis ??= a.text;
+          for (const e of b.evidence) if (!a.evidence.some((x) => x.evidenceId === e.evidenceId)) a.evidence.push({ ...e, basis: e.basis ?? b.text });
           a.rationale = a.rationale || b.rationale;
           removed.add(b.id);
         }
@@ -290,9 +292,9 @@ const AUTHORITATIVE = new Set(["github", "doc", "tasks", "attestation"]);
 
 export function verifyRules(claims: Claim[], ev: Map<string, EvidenceUnit>, kinds: Map<string, string>): void {
   for (const c of claims) {
-    const ct = tokens(c.text.replace(/^Recurring \(\d+ reports\): /, ""));
     for (const link of c.evidence) {
       const u = ev.get(link.evidenceId);
+      const ct = tokens((link.basis ?? c.text).replace(/^Recurring \(\d+ reports\): /, ""));
       link.score = u ? Math.round(overlap(ct, tokens(u.text)) * 100) / 100 : 0;
     }
   }

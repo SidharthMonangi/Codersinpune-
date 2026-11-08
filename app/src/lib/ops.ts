@@ -247,7 +247,7 @@ function canSee(role: RoleDef, u: EvidenceUnit) {
   return u.acl.some((g) => role.groups.includes(g)) && u.sensitivity <= role.clearance;
 }
 
-export function visibility(ws: Workspace, c: Claim, role: RoleDef): { visible: boolean; links: Claim["evidence"]; hiddenFully: boolean } {
+export function visibility(ws: Workspace, c: Claim, role: RoleDef): { visible: boolean; links: Claim["evidence"]; hiddenFully: boolean; text: string } {
   const ev = new Map(ws.evidence.map((u) => [u.id, u]));
   const links = c.evidence.filter((l) => {
     const u = ev.get(l.evidenceId);
@@ -264,8 +264,22 @@ export function visibility(ws: Workspace, c: Claim, role: RoleDef): { visible: b
   }
   // (c) the claim text itself must be within clearance
   if (ok && suggestSensitivity(c.text, 0) > role.clearance) ok = false;
+  let text = c.text;
+  // If the representative wording came from a source this reader can't open, re-render the claim
+  // from a statement extracted from one of the reader's OWN sources instead (never from hidden ones).
+  if (!ok && c.origin === "rules") {
+    for (const l of supports) {
+      const u = ev.get(l.evidenceId)!;
+      const basis = l.basis ?? c.text;
+      if (overlap(tokens(basis), tokens(u.text)) >= 0.5 && suggestSensitivity(basis, 0) <= role.clearance) {
+        ok = true;
+        text = basis;
+        break;
+      }
+    }
+  }
   const hiddenFully = !ok && c.sensitivity >= 3 && role.clearance < 3;
-  return { visible: ok, links, hiddenFully };
+  return { visible: ok, links, hiddenFully, text };
 }
 
 export function compile(ws: Workspace, versionN: number, recipientId: string, roleId: string): CompiledHandover {
@@ -298,7 +312,7 @@ export function compile(ws: Workspace, versionN: number, recipientId: string, ro
     visible.push({
       id: c.id,
       type: c.type,
-      text: c.text,
+      text: v.text,
       trust: c.trust,
       owner: personName(ws, c.owner) || undefined,
       due: c.due,

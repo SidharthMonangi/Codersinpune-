@@ -71,6 +71,7 @@ export interface EvidenceLink {
   evidenceId: string;
   relation: "supports" | "contradicts";
   score: number; // verifier score 0..1
+  basis?: string; // the statement this evidence was extracted as (for merged/corroborating evidence)
 }
 
 export interface Claim {
