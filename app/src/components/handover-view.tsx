@@ -61,6 +61,7 @@ export function HandoverView({
           </button>
         ))}
         {c.owner ? <span className="ml-2">Owner: <b>{c.owner}</b></span> : null}
+        {c.ownerLeaving ? <span className="ml-1 rounded bg-red-50 px-1.5 py-0.5 font-semibold text-red-700">owner is leaving: confirm a new owner</span> : null}
         {c.due ? <span className="ml-2">Due: <b>{fmtDate(c.due)}</b></span> : null}
       </div>
       {c.citations.filter((ct) => openCite === c.id + ct.evidenceId).map((ct) => (
@@ -128,7 +129,17 @@ export function HandoverView({
         ) : null}
       </div>
 
-      <section>
+      {!compact ? (
+        <nav className="sticky top-14 z-20 -mx-1 flex flex-wrap gap-1 rounded-lg border border-slate-200 bg-white/95 p-1.5 text-xs backdrop-blur">
+          {[["plan", "Plan"], ["people", "People"], ...CLAIM_TYPES.filter((t) => h.claims.some((c) => c.type === t.id && !c.superseded)).map((t) => [t.id, t.plural]), ["unknowns", "Unknowns"], ["sealed", "Sealed"]].map(([id, label]) => (
+            <a key={id} href={`#${id}`} className="rounded-md px-2 py-1 text-ink2 hover:bg-amberl hover:text-ink">
+              {label}
+            </a>
+          ))}
+        </nav>
+      ) : null}
+
+      <section id="plan" className="scroll-mt-28">
         <h2 className="mb-2 text-lg font-bold">Your continuation plan</h2>
         <div className={`grid gap-3 ${compact ? "" : "md:grid-cols-3"}`}>
           <Plan title="Day 1" items={h.plan.day1} />
@@ -138,7 +149,7 @@ export function HandoverView({
       </section>
 
       {h.people.length ? (
-        <section>
+        <section id="people" className="scroll-mt-28">
           <h2 className="mb-2 text-lg font-bold">People to talk to</h2>
           <div className={`grid gap-2 ${compact ? "" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
             {h.people.map((p) => (
@@ -156,7 +167,7 @@ export function HandoverView({
         const cl = h.claims.filter((c) => c.type === t.id && (showSup || !c.superseded));
         if (!cl.length) return null;
         return (
-          <section key={t.id}>
+          <section key={t.id} id={t.id} className="scroll-mt-28">
             <h2 className="mb-2 text-lg font-bold">
               {t.plural} <span className="text-sm font-normal text-slate-500">({cl.length})</span>
             </h2>
@@ -174,7 +185,7 @@ export function HandoverView({
         </button>
       ) : null}
 
-      <section>
+      <section id="unknowns" className="scroll-mt-28">
         <h2 className="mb-2 text-lg font-bold">What is still unknown</h2>
         <p className="mb-2 text-sm text-slate-600">These are questions Baton could not answer from the sources and the departing member could not or did not answer. They are listed so they don&apos;t get lost; Baton doesn&apos;t guess.</p>
         {h.unknowns.length ? (
@@ -192,7 +203,7 @@ export function HandoverView({
         )}
       </section>
 
-      <section>
+      <section id="sealed" className="scroll-mt-28">
         <h2 className="mb-2 text-lg font-bold">Sealed for your role</h2>
         {sealedByArea.length || h.hiddenCount ? (
           <div className="space-y-1.5">

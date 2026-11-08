@@ -180,6 +180,7 @@ export interface CompiledClaim {
   area: string;
   critical: boolean;
   superseded?: boolean;
+  ownerLeaving?: boolean;
   citations: { evidenceId: string; locator: string; source: string; excerpt: string; uri: string; relation: string }[];
 }
 

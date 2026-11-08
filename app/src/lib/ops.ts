@@ -304,6 +304,7 @@ export function compile(ws: Workspace, versionN: number, recipientId: string, ro
       due: c.due,
       area: c.area,
       superseded: !!c.supersededBy,
+      ownerLeaving: !!c.owner && c.owner === ws.leaverId && !c.supersededBy && ["next_action", "blocker", "ownership", "risk"].includes(c.type),
       critical: !c.supersededBy && !isHistorical(ws, c) && (["risk", "blocker", "dependency"].includes(c.type) || (c.type === "next_action" && soon(c.due, 30))),
       citations: v.links.map((l) => {
         const u = ev.get(l.evidenceId)!;
