@@ -326,7 +326,7 @@ export function compile(ws: Workspace, versionN: number, recipientId: string, ro
     if (c.owner) names.add(c.owner);
     if (c.type === "contact" || c.type === "ownership") for (const p of mentionedPeople(ws.people, c.text)) names.add(p.name);
     for (const n of names) {
-      if (n === personName(ws, ws.leaverId)) continue;
+      if (n === personName(ws, ws.leaverId) || n === personName(ws, recipientId)) continue;
       peopleMap.set(n, (peopleMap.get(n) ?? new Set()).add(c.area));
     }
   }
