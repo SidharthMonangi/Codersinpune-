@@ -23,10 +23,10 @@ export function Review() {
           Then they approve a version, which is hashed and frozen. Recipients only ever see approved versions.
         </Help>
         <div className="flex flex-wrap items-center gap-2">
-          <button onClick={() => setFilter("pending")} className={`rounded-full px-3 py-1 text-sm ${filter === "pending" ? "bg-ink text-white" : "bg-white ring-1 ring-slate-200"}`}>
+          <button onClick={() => setFilter("pending")} className={`rounded-full px-3 py-1 text-sm ${filter === "pending" ? "bg-ink text-white" : "bg-white ring-1 ring-rule"}`}>
             Needs review ({pending.length})
           </button>
-          <button onClick={() => setFilter("all")} className={`rounded-full px-3 py-1 text-sm ${filter === "all" ? "bg-ink text-white" : "bg-white ring-1 ring-slate-200"}`}>
+          <button onClick={() => setFilter("all")} className={`rounded-full px-3 py-1 text-sm ${filter === "all" ? "bg-ink text-white" : "bg-white ring-1 ring-rule"}`}>
             All claims ({ws.claims.length})
           </button>
           {verifiedPending ? (
@@ -40,7 +40,7 @@ export function Review() {
           if (!cl.length) return null;
           return (
             <div key={t.id}>
-              <h3 className="mb-1.5 mt-3 text-sm font-bold uppercase tracking-wide text-slate-500">{t.plural}</h3>
+              <h3 className="mb-1.5 mt-3 text-sm font-bold uppercase tracking-wide text-mute">{t.plural}</h3>
               <div className="space-y-2">
                 {cl.map((c) => (
                   <ReviewItem key={c.id} c={c} />
@@ -53,7 +53,7 @@ export function Review() {
       </div>
       <div className="space-y-4">
         <Card className="lg:sticky lg:top-20">
-          <h3 className="font-bold">Approve a version</h3>
+          <h3 className="font-display text-[22px] leading-tight">Approve a version</h3>
           <p className="mt-1 text-sm text-ink2">
             You are acting as <b>{actor}</b>. {pending.length ? `${pending.length} claims are still unreviewed; they will be included and marked with their trust state.` : "All claims reviewed."}
           </p>
@@ -69,24 +69,24 @@ export function Review() {
             Approve as {actor} →
           </Btn>
           <div className="mt-4">
-            <div className="text-xs font-semibold uppercase text-slate-500">Version history</div>
-            {ws.versions.length === 0 ? <p className="text-sm text-slate-500">No approved versions yet.</p> : null}
+            <div className="text-xs font-semibold uppercase text-mute">Version history</div>
+            {ws.versions.length === 0 ? <p className="text-sm text-mute">No approved versions yet.</p> : null}
             <ul className="mt-1 space-y-1 text-sm">
               {ws.versions.map((x, i) => {
                 const prev = ws.versions[i + 1];
                 const added = prev ? x.claims.filter((c) => !prev.claims.some((p) => p.text === c.text)).length : x.claimCount;
                 const removed = prev ? prev.claims.filter((p) => !x.claims.some((c) => c.text === p.text)).length : 0;
                 return (
-                  <li key={x.id} className="rounded-md bg-slate-50 px-2 py-1.5">
+                  <li key={x.id} className="rounded-md bg-paper/60 px-2 py-1.5">
                     <b>v{x.n}</b> · <span className="font-mono text-xs">{x.hash}</span> · by {x.approvedBy}
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-mute">
                       {new Date(x.at).toLocaleString("en-IN")} · {x.claimCount} claims · readiness {x.readiness} · +{added} / −{removed} vs previous
                     </div>
                   </li>
                 );
               })}
             </ul>
-            {v ? <p className="mt-2 text-xs text-slate-500">Changes made after approval need a new version before recipients see them.</p> : null}
+            {v ? <p className="mt-2 text-xs text-mute">Changes made after approval need a new version before recipients see them.</p> : null}
           </div>
         </Card>
       </div>
@@ -102,7 +102,7 @@ function ReviewItem({ c }: { c: Claim }) {
     <ClaimCard c={c}>
       {editing ? (
         <div className="mt-2">
-          <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm" />
+          <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} className="field" />
           <div className="mt-1 flex gap-2">
             <Btn kind="primary" disabled={!!busy} onClick={() => act("review", { claimId: c.id, action: "edit", text }, "Saved edit…").then(() => setEditing(false))}>
               Save edit

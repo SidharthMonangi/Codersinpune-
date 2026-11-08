@@ -15,13 +15,13 @@ export function Cites({ ids, claimText, max = 4 }: { ids: { evidenceId: string; 
           key={l.evidenceId}
           onClick={() => openEvidence(ids.map((i) => i.evidenceId), claimText)}
           title={`${l.relation} · verifier score ${l.score}`}
-          className={`rounded border px-1.5 py-0.5 font-mono text-[10.5px] hover:border-amber hover:bg-amberl ${l.relation === "contradicts" ? "border-orange-300 bg-orange-50 text-orange-800" : "border-slate-300 bg-slate-50 text-slate-700"}`}
+          className={`etag font-mono ${l.relation === "contradicts" ? "contra" : ""}`}
         >
           {u!.locator.length > 34 ? u!.locator.slice(0, 33) + "…" : u!.locator}
         </button>
       ))}
       {items.length > max ? (
-        <button onClick={() => openEvidence(ids.map((i) => i.evidenceId), claimText)} className="rounded border border-slate-300 px-1.5 py-0.5 font-mono text-[10.5px]">
+        <button onClick={() => openEvidence(ids.map((i) => i.evidenceId), claimText)} className="etag font-mono">
           +{items.length - max}
         </button>
       ) : null}
@@ -37,7 +37,7 @@ export function Highlight({ text, claim }: { text: string; claim?: string }) {
       {text.split(/(\s+)/).map((w, i) => {
         const t = w.toLowerCase().replace(/[^a-z0-9#]/g, "");
         return ct.has(t) ? (
-          <mark key={i} className="rounded bg-amber-200/70 px-0.5">
+          <mark key={i} className="rounded-sm bg-amber/35 px-0.5 text-ink">
             {w}
           </mark>
         ) : (
@@ -51,39 +51,39 @@ export function Highlight({ text, claim }: { text: string; claim?: string }) {
 export function EvidenceDrawer({ ws, ids, claim, onClose }: { ws: Workspace; ids: string[]; claim?: string; onClose: () => void }) {
   const units = ids.map((id) => ws.evidence.find((e) => e.id === id)).filter(Boolean) as Workspace["evidence"];
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/30" onClick={onClose}>
-      <aside className="h-full w-full max-w-xl overflow-y-auto bg-white p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="mb-3 flex items-start justify-between gap-3">
+    <div className="fixed inset-0 z-50 flex justify-end bg-ink/40 backdrop-blur-[2px]" onClick={onClose}>
+      <aside className="drawer-in h-full w-full max-w-xl overflow-y-auto border-l border-rule bg-paper p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-amberd">Evidence</div>
-            {claim ? <div className="mt-1 text-sm font-semibold">“{claim}”</div> : null}
-            <div className="mt-1 text-xs text-slate-500">Words shared with the claim are highlighted, so you can check the claim against its source yourself.</div>
+            <div className="label text-amberd">Evidence · {units.length} item{units.length > 1 ? "s" : ""}</div>
+            {claim ? <div className="font-display mt-1 text-[26px] leading-tight">“{claim}”</div> : null}
+            <div className="mt-2 text-xs text-mute">Words shared with the claim are highlighted, so you can check the claim against its source yourself.</div>
           </div>
-          <button onClick={onClose} className="rounded-md px-2 py-1 text-slate-500 hover:bg-slate-100" aria-label="Close">
+          <button onClick={onClose} className="rounded-full px-2.5 py-1 text-mute hover:bg-paper2" aria-label="Close">
             ✕
           </button>
         </div>
         <div className="space-y-3">
-          {units.map((u) => {
+          {units.map((u, i) => {
             const s = ws.sources.find((x) => x.id === u.sourceId);
             return (
-              <div key={u.id} className="rounded-lg border border-slate-200 p-3">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-600">
+              <div key={u.id} className={`sheet rise rise-${Math.min(i + 1, 5)} p-4`}>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-mute">
                   <span className="font-semibold text-ink">{s?.title}</span>
-                  <span className="font-mono">{u.locator}</span>
-                  <span>· {personName(ws, u.author) || u.author}</span>
+                  <span className="etag">{u.locator}</span>
+                  <span>{personName(ws, u.author) || u.author}</span>
                   <span>· {+new Date(u.ts) < 86400000 ? "undated" : fmtDate(u.ts)}</span>
                 </div>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed">
+                <p className="mt-2.5 whitespace-pre-wrap text-[15px] leading-relaxed">
                   <Highlight text={u.text} claim={claim} />
                 </p>
-                <div className="mt-2 flex flex-wrap gap-1 text-[11px]">
-                  <span className="rounded bg-slate-100 px-1.5 py-0.5">Visible to: {u.acl.map((g) => ws.groups.find((x) => x.id === g)?.label ?? g).join(", ")}</span>
-                  <span className="rounded bg-slate-100 px-1.5 py-0.5">Sensitivity: {SENSITIVITY_LABEL[u.sensitivity]}</span>
-                  <span className="rounded bg-slate-100 px-1.5 py-0.5">Area: {u.area}</span>
+                <div className="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+                  <span className="rounded-full bg-paper2 px-2 py-0.5">Visible to: {u.acl.map((g) => ws.groups.find((x) => x.id === g)?.label ?? g).join(", ")}</span>
+                  <span className="rounded-full bg-paper2 px-2 py-0.5">{SENSITIVITY_LABEL[u.sensitivity]}</span>
+                  <span className="rounded-full bg-paper2 px-2 py-0.5">{u.area}</span>
                   {u.uri && /^https?:/.test(u.uri) ? (
-                    <a href={u.uri} target="_blank" rel="noreferrer" className="rounded bg-slate-100 px-1.5 py-0.5 text-blue-700 underline">
-                      Open original
+                    <a href={u.uri} target="_blank" rel="noreferrer" className="rounded-full bg-paper2 px-2 py-0.5 text-blue-700 underline">
+                      Open original ↗
                     </a>
                   ) : null}
                 </div>

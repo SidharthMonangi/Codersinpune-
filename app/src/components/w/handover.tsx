@@ -53,8 +53,8 @@ export function Handover() {
         (a) the reader can open at least one of its sources, (b) those sources alone still support it, and (c) its sensitivity is within the reader&apos;s clearance. Otherwise it appears as a 🔒 sealed placeholder, or is withheld entirely if it is restricted.
       </Help>
       <Card>
-        <h2 className="font-bold">Share links</h2>
-        <div className="mt-2 divide-y divide-slate-100">
+        <h2 className="font-display text-[26px] leading-tight">Share links</h2>
+        <div className="mt-2 divide-y divide-rule/60">
           {ws.recipients.map((r) => {
             const shares = ws.shares.filter((s) => s.recipientId === r.personId && s.roleId === r.roleId);
             const latest = shares[0];
@@ -62,9 +62,9 @@ export function Handover() {
             return (
               <div key={r.personId + r.roleId} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
                 <div className="text-sm">
-                  <b>{personName(ws, r.personId)}</b> <span className="text-slate-500">as {ws.roles.find((x) => x.id === r.roleId)?.label}</span>
+                  <b>{personName(ws, r.personId)}</b> <span className="text-mute">as {ws.roles.find((x) => x.id === r.roleId)?.label}</span>
                   {latest ? (
-                    <div className="mt-0.5 text-xs text-slate-500">
+                    <div className="mt-0.5 text-xs text-mute">
                       v{latest.versionN} shared {new Date(latest.createdAt).toLocaleString("en-IN")} · {ack.some((a) => a.claimId === "__all__") ? "✓ receipt acknowledged" : "not yet acknowledged"} · {ack.filter((a) => a.claimId !== "__all__").length} critical items acknowledged
                       {latest.versionN < v.n ? <span className="ml-1 font-semibold text-amberd">(older version: share again)</span> : null}
                     </div>
@@ -86,24 +86,24 @@ export function Handover() {
               </div>
             );
           })}
-          {!ws.recipients.length ? <p className="py-2 text-sm text-slate-500">Add recipients in Connect → Handover setup.</p> : null}
+          {!ws.recipients.length ? <p className="py-2 text-sm text-mute">Add recipients in Connect → Handover setup.</p> : null}
         </div>
-        <p className="mt-2 text-xs text-slate-500">Links are unguessable 28-character tokens. The recipient page is rendered on the server from the already-filtered handover, so sealed content never reaches their browser.</p>
+        <p className="mt-2 text-xs text-mute">Links are unguessable 28-character tokens. The recipient page is rendered on the server from the already-filtered handover, so sealed content never reaches their browser.</p>
       </Card>
 
       {opts.length >= 1 ? (
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="font-bold">Compare what each role sees</h2>
-            <select value={left} onChange={(e) => setLeft(e.target.value)} className="rounded-md border border-slate-300 px-2 py-1 text-sm">
+            <h2 className="font-display text-[26px] leading-tight">Compare what each role sees</h2>
+            <select value={left} onChange={(e) => setLeft(e.target.value)} className="rounded-md border border-rule px-2 py-1 text-sm">
               {opts.map((o) => (
                 <option key={o.key} value={o.key}>
                   {o.label}
                 </option>
               ))}
             </select>
-            <span className="text-slate-400">vs</span>
-            <select value={right} onChange={(e) => setRight(e.target.value)} className="rounded-md border border-slate-300 px-2 py-1 text-sm">
+            <span className="text-mute">vs</span>
+            <select value={right} onChange={(e) => setRight(e.target.value)} className="rounded-md border border-rule px-2 py-1 text-sm">
               <option value="">(none)</option>
               {opts.map((o) => (
                 <option key={o.key} value={o.key}>
@@ -114,8 +114,8 @@ export function Handover() {
           </div>
           <div className={`mt-3 grid gap-4 ${right ? "lg:grid-cols-2" : ""}`}>
             {[left, right].filter(Boolean).map((k) => (
-              <div key={k} className="max-h-[80vh] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 p-3">
-                {pv[k + v.n] ? <HandoverView h={pv[k + v.n]} compact /> : <div className="p-6 text-center text-sm text-slate-500">Building preview…</div>}
+              <div key={k} className="max-h-[80vh] overflow-y-auto rounded-xl border border-rule bg-paper/60 p-3">
+                {pv[k + v.n] ? <HandoverView h={pv[k + v.n]} compact /> : <div className="p-6 text-center text-sm text-mute">Building preview…</div>}
               </div>
             ))}
           </div>

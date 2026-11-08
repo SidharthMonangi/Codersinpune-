@@ -11,22 +11,24 @@ export function ClaimCard({ c, children }: { c: Claim; children?: React.ReactNod
   const { ws } = useWs();
   const sup = c.supersededBy ? ws.claims.find((x) => x.id === c.supersededBy) : null;
   return (
-    <div className={`rounded-lg border border-slate-200 border-l-4 bg-white px-3 py-2.5 ${TRUST[c.trust].bar} ${c.status === "rejected" ? "opacity-50" : ""}`}>
-      <div className="flex flex-wrap items-center gap-1.5">
+    <div className={`slip ${c.status === "rejected" ? "opacity-45" : ""}`} style={{ ["--slip" as string]: TRUST[c.trust].slip }}>
+      <div className="flex flex-wrap items-center gap-2">
         <TypeLabel type={c.type} />
-        <TrustBadge trust={c.trust} extra={c.trust === "attested" ? "Gap Interview" : c.evidence.length > 1 ? `${c.evidence.length} sources` : undefined} />
-        {c.supersededBy ? <span className="rounded-full bg-amberl px-2 py-0.5 text-[10.5px] font-bold text-amberd">SUPERSEDED</span> : null}
-        {c.origin === "ai" ? <span className="text-[10.5px] text-slate-400">AI-extracted</span> : c.origin === "rules" ? <span className="text-[10.5px] text-slate-400">rule-extracted</span> : null}
-        {c.status !== "pending" ? <span className={`ml-auto text-[10.5px] font-bold uppercase ${c.status === "rejected" ? "text-red-600" : "text-green-700"}`}>{c.status}</span> : null}
+        <TrustBadge trust={c.trust} extra={c.trust === "attested" ? "Gap Interview" : c.evidence.length > 1 ? `${c.evidence.length} items` : undefined} />
+        {c.supersededBy ? <span className="stamp" style={{ color: "#b45309" }}>Superseded</span> : null}
+        <span className="label text-[9.5px] text-mute/70">{c.origin === "ai" ? "AI-extracted" : c.origin === "rules" ? "rule-extracted" : "human"}</span>
+        {c.status !== "pending" ? (
+          <span className={`label ml-auto rounded-full px-2 py-0.5 text-[9.5px] ${c.status === "rejected" ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-800"}`}>{c.status}</span>
+        ) : null}
       </div>
-      <div className={`mt-1 text-sm ${c.supersededBy ? "text-slate-500 line-through decoration-slate-300" : ""}`}>{c.text}</div>
-      {sup ? <div className="mt-1 text-xs text-amberd">→ Replaced by: “{sup.text.slice(0, 120)}”</div> : null}
-      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600">
+      <div className={`mt-1.5 text-[15px] leading-snug ${c.supersededBy ? "text-mute line-through decoration-mute/40" : ""}`}>{c.text}</div>
+      {sup ? <div className="mt-1.5 text-xs text-amberd">↳ Replaced by: “{sup.text.slice(0, 120)}”</div> : null}
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-ink2">
         <Cites ids={c.evidence} claimText={c.text} />
-        {c.owner ? <span>Owner: <b>{personName(ws, c.owner)}</b></span> : null}
-        {c.due ? <span>Due: <b>{fmtDate(c.due)}</b></span> : null}
-        <span className="text-slate-400">{c.area}</span>
-        {c.reviewNote ? <span className="italic text-slate-500">Note: {c.reviewNote}</span> : null}
+        {c.owner ? <span>Owner <b>{personName(ws, c.owner)}</b></span> : null}
+        {c.due ? <span className="font-mono">due {fmtDate(c.due)}</span> : null}
+        <span className="rounded-full bg-paper2 px-2 py-0.5 text-[11px]">{c.area}</span>
+        {c.reviewNote ? <span className="italic text-mute">Note: {c.reviewNote}</span> : null}
       </div>
       {children}
     </div>
@@ -64,19 +66,19 @@ export function Ledger() {
     <div>
       <div className="flex flex-wrap items-center gap-2">
         {(["claims", "timeline", "owners", "conflicts"] as const).map((v) => (
-          <button key={v} onClick={() => setView(v)} className={`rounded-full px-3 py-1 text-sm ${view === v ? "bg-ink text-white" : "bg-white text-ink2 ring-1 ring-slate-200"}`}>
+          <button key={v} onClick={() => setView(v)} className={`rounded-full px-3.5 py-1.5 text-sm transition ${view === v ? "bg-ink text-paper shadow-sm" : "bg-card text-ink2 ring-1 ring-rule hover:ring-[#cbbd9f]"}`}>
             {{ claims: "Evidence ledger", timeline: "Decision timeline", owners: "Ownership & areas", conflicts: `Conflicts (${ws.claims.filter((c) => c.conflictWith?.length).length})` }[v]}
           </button>
         ))}
-        <span className="ml-auto text-xs text-slate-500">Each claim links to the exact items it came from. Click a chip to see the source.</span>
+        <span className="ml-auto text-xs text-mute">Each claim links to the exact items it came from. Click a chip to see the source.</span>
       </div>
 
       {view === "claims" && (
         <div className="mt-3 grid gap-4 lg:grid-cols-4">
           <Card className="h-fit space-y-3 lg:sticky lg:top-20">
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search claims…" className="w-full rounded-md border border-slate-300 px-2 py-1.5 text-sm" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search claims…" className="field" />
             <div>
-              <div className="text-xs font-semibold uppercase text-slate-500">Type</div>
+              <div className="text-xs font-semibold uppercase text-mute">Type</div>
               <div className="mt-1 flex flex-wrap gap-1">
                 <Chip on={type === "all"} onClick={() => setType("all")}>All ({ws.claims.filter((c) => showSup || !c.supersededBy).length})</Chip>
                 {CLAIM_TYPES.map((t) => {
@@ -90,7 +92,7 @@ export function Ledger() {
               </div>
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase text-slate-500">Trust</div>
+              <div className="text-xs font-semibold uppercase text-mute">Trust</div>
               <div className="mt-1 flex flex-wrap gap-1">
                 <Chip on={trust === "all"} onClick={() => setTrust("all")}>All</Chip>
                 {(["verified", "inferred", "conflicting", "attested"] as Trust[]).map((t) => (
@@ -118,7 +120,7 @@ export function Ledger() {
 
 function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button onClick={onClick} className={`rounded-full px-2 py-0.5 text-xs ${on ? "bg-amber text-ink font-semibold" : "bg-slate-100 text-ink2 hover:bg-slate-200"}`}>
+    <button onClick={onClick} className={`rounded-full px-2.5 py-0.5 text-xs transition ${on ? "bg-ink text-paper" : "bg-paper2/80 text-ink2 hover:bg-paper2"}`}>
       {children}
     </button>
   );
@@ -138,11 +140,11 @@ function Timeline() {
   return (
     <div className="mt-4">
       <p className="mb-3 text-sm text-ink2">How the project got here: decisions in order, including the ones that were later reversed. Undated documents are shown first.</p>
-      <ol className="relative ml-3 border-l-2 border-slate-200">
+      <ol className="relative ml-3 border-l-2 border-rule">
         {items.map(({ c, t }) => (
           <li key={c.id} className="mb-3 ml-5">
             <span className={`absolute -left-[7px] mt-3 h-3 w-3 rounded-full ${c.supersededBy ? "bg-slate-300" : c.trust === "attested" ? "bg-violet-500" : "bg-amber"}`} />
-            <div className="mb-1 text-xs font-semibold text-slate-500">{t ? fmtDate(new Date(t).toISOString()) : "Undated document"}</div>
+            <div className="mb-1 text-xs font-semibold text-mute">{t ? fmtDate(new Date(t).toISOString()) : "Undated document"}</div>
             <ClaimCard c={c} />
           </li>
         ))}
@@ -161,12 +163,12 @@ function Owners() {
   return (
     <div className="mt-4 grid gap-4 lg:grid-cols-2">
       <Card>
-        <h3 className="font-bold">Who owns what</h3>
+        <h3 className="font-display text-[22px] leading-tight">Who owns what</h3>
         <div className="mt-2 space-y-3">
           {[...owners.entries()].map(([pid, cl]) => (
             <div key={pid}>
               <div className="text-sm font-semibold">
-                {personName(ws, pid)} <span className="font-normal text-slate-500">· {ws.people.find((p) => p.id === pid)?.title}</span>
+                {personName(ws, pid)} <span className="font-normal text-mute">· {ws.people.find((p) => p.id === pid)?.title}</span>
                 {pid === ws.leaverId ? <span className="ml-1 rounded bg-red-50 px-1 text-[10px] font-bold text-red-700">LEAVING: REASSIGN</span> : null}
               </div>
               <ul className="ml-4 list-disc text-sm text-ink2">
@@ -189,7 +191,7 @@ function Owners() {
         ) : null}
       </Card>
       <Card>
-        <h3 className="font-bold">Areas</h3>
+        <h3 className="font-display text-[22px] leading-tight">Areas</h3>
         <div className="mt-2 space-y-2">
           {areas.map((a) => {
             const cl = active.filter((c) => c.area === a);
@@ -197,7 +199,7 @@ function Owners() {
             return (
               <div key={a} className="flex items-center justify-between text-sm">
                 <span className="font-medium">{a}</span>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-mute">
                   {cl.length} claims · {risks} risks/blockers · {ws.gaps.filter((g) => g.area === a && g.status === "open").length} open gaps
                 </span>
               </div>
@@ -236,11 +238,11 @@ function Conflicts() {
             </div>
             <div className="grid gap-2 md:grid-cols-2">
               <div>
-                <div className="mb-1 text-xs text-slate-500">Earlier · {claimDate(ws, a) ? fmtDate(new Date(claimDate(ws, a)).toISOString()) : "undated"}</div>
+                <div className="mb-1 text-xs text-mute">Earlier · {claimDate(ws, a) ? fmtDate(new Date(claimDate(ws, a)).toISOString()) : "undated"}</div>
                 <ClaimCard c={a} />
               </div>
               <div>
-                <div className="mb-1 text-xs text-slate-500">Later · {claimDate(ws, b) ? fmtDate(new Date(claimDate(ws, b)).toISOString()) : "undated"}</div>
+                <div className="mb-1 text-xs text-mute">Later · {claimDate(ws, b) ? fmtDate(new Date(claimDate(ws, b)).toISOString()) : "undated"}</div>
                 <ClaimCard c={b} />
               </div>
             </div>
