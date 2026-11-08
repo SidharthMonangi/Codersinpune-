@@ -1,0 +1,29 @@
+{
+ "repo": "codecraft-sahyadri/orion",
+ "issues": [
+  {"number":97,"title":"Deploy failed on Friday","body":"GitHub Actions minutes exhausted. Deploy failed again at the end of the week.","user":{"login":"priya-nair"},"created_at":"2026-08-21T18:00:00Z","state":"closed","labels":[{"name":"ci"}]},
+  {"number":103,"title":"CI quota exhausted again","body":"Deploys failing on Friday because the runner quota is used up. Recurring problem.","user":{"login":"kabir-shah"},"created_at":"2026-09-04T17:30:00Z","state":"closed","labels":[{"name":"ci"}]},
+  {"number":118,"title":"Migrate backend from Firebase to Supabase","body":"Migrating auth, events and registrations tables to Supabase Postgres. Firebase free tier quota broke during registrations.","user":{"login":"priya-nair"},"created_at":"2026-08-22T10:00:00Z","state":"closed","pull_request":{"merged_at":"2026-09-02T12:00:00Z"},"labels":[{"name":"backend"}]},
+  {"number":121,"title":"Friday deploy failure","body":"Same as #97 and #103, CI runner quota exhausted on Friday. Deploy failed.","user":{"login":"sneha-patil"},"created_at":"2026-09-18T19:00:00Z","state":"open","labels":[{"name":"ci"}]},
+  {"number":130,"title":"Event card layout broken on mobile","body":"Event cards overflow on small screens. Good first issue.","user":{"login":"arjun-mehta"},"created_at":"2026-09-24T09:00:00Z","state":"open","labels":[{"name":"good first issue"},{"name":"frontend"}],"assignee":{"login":"rohan-desai"}},
+  {"number":142,"title":"Switch login to college SSO","body":"Replaces email magic links with college SSO. The SSO certificate expires on 14 March 2027 and must be renewed by the IT cell.","user":{"login":"priya-nair"},"created_at":"2026-09-11T11:00:00Z","state":"closed","pull_request":{"merged_at":"2026-09-13T15:00:00Z"},"labels":[{"name":"auth"}]},
+  {"number":147,"title":"Webhook has no retry handling","body":"Razorpay may resend webhooks. Without idempotency we could create duplicate registrations and double charge. Blocked until someone owns the payments module.","user":{"login":"kabir-shah"},"created_at":"2026-10-09T10:00:00Z","state":"open","labels":[{"name":"payments"},{"name":"blocker"}]},
+  {"number":151,"title":"Payment refunds","body":"Adds refund flow for cancelled registrations. Test test_refund_partial is failing.","user":{"login":"priya-nair"},"created_at":"2026-10-20T14:00:00Z","state":"open","pull_request":{"merged_at":null},"labels":[{"name":"payments"}]},
+  {"number":156,"title":"Email reminders instead of OneSignal","body":"Switching to email-only reminders because OneSignal is too expensive.","user":{"login":"priya-nair"},"created_at":"2026-10-03T09:00:00Z","state":"closed","pull_request":{"merged_at":"2026-10-05T10:00:00Z"},"labels":[{"name":"notifications"}]},
+  {"number":160,"title":"Migration 0009 only applied on staging","body":"Migration 0009 (registration status column) runs on staging. Production not migrated yet. Need to apply before fest.","user":{"login":"priya-nair"},"created_at":"2026-10-28T16:00:00Z","state":"open","labels":[{"name":"backend"},{"name":"risk"}]}
+ ],
+ "commits": [
+  {"sha":"a1f3c9e","commit":{"message":"migrations: 0007 create registrations table (postgres)","author":{"name":"Priya Nair","date":"2026-08-28T12:00:00Z"}}},
+  {"sha":"b7d2e41","commit":{"message":"payments: integrate Razorpay checkout with UPI","author":{"name":"Priya Nair","date":"2026-09-01T12:00:00Z"}}},
+  {"sha":"c9e1a77","commit":{"message":"payments: webhook handler for payment.captured","author":{"name":"Priya Nair","date":"2026-09-03T12:00:00Z"}}},
+  {"sha":"d4b8f10","commit":{"message":"auth: college SSO via SAML","author":{"name":"Priya Nair","date":"2026-09-12T12:00:00Z"}}},
+  {"sha":"e2a6c35","commit":{"message":"checkin: QR code generation for tickets","author":{"name":"Priya Nair","date":"2026-09-08T12:00:00Z"}}},
+  {"sha":"f5c7d92","commit":{"message":"payments: refund endpoint (wip)","author":{"name":"Priya Nair","date":"2026-10-21T12:00:00Z"}}},
+  {"sha":"0a9b8c7","commit":{"message":"email: reminder templates","author":{"name":"Kabir Shah","date":"2026-10-06T12:00:00Z"}}},
+  {"sha":"1b2c3d4","commit":{"message":"ui: event cards and schedule page","author":{"name":"Sneha Patil","date":"2026-09-20T12:00:00Z"}}},
+  {"sha":"2c3d4e5","commit":{"message":"migrations: 0009 add registration status (staging only)","author":{"name":"Priya Nair","date":"2026-10-27T12:00:00Z"}}},
+  {"sha":"3d4e5f6","commit":{"message":"checkin: scanner page for volunteers","author":{"name":"Priya Nair","date":"2026-10-15T12:00:00Z"}}},
+  {"sha":"4e5f6a7","commit":{"message":"payments: store razorpay order ids","author":{"name":"Priya Nair","date":"2026-10-11T12:00:00Z"}}},
+  {"sha":"5f6a7b8","commit":{"message":"ui: tailwind design tokens","author":{"name":"Sneha Patil","date":"2026-08-30T12:00:00Z"}}}
+ ]
+}

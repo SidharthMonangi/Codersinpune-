@@ -1,0 +1,19 @@
+WEBVTT
+
+00:01:10.000 --> 00:01:30.000
+<v Priya Nair>So the plan is final, we migrate to Supabase. Firebase quota is the reason, we cannot pay for Blaze.
+
+00:03:02.000 --> 00:03:20.000
+<v Kabir Shah>Can we keep MongoDB for analytics?
+
+00:03:21.000 --> 00:03:40.000
+<v Priya Nair>No, one database. Everything goes to Postgres.
+
+00:12:41.000 --> 00:13:05.000
+<v Arjun Mehta>What is the risk if the migration slips past September?
+
+00:13:06.000 --> 00:13:30.000
+<v Priya Nair>Then registrations open on Firebase and we hit the quota again on day one. Migration must finish before registrations open on 15 September.
+
+00:20:15.000 --> 00:20:40.000
+<v Sneha Patil>Action item: Sneha will send the final poster assets to Arjun by Friday.

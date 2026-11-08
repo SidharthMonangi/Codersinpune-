@@ -1,0 +1,10 @@
+Card,List,Members,Due,Labels
+Fix event card layout on mobile (#130),In Progress,Rohan Desai,2026-11-20,frontend
+Webhook retry and idempotency (#147),Blocked,,2026-12-01,payments
+Merge or drop refund PR #151,To Do,Priya Nair,2026-12-05,payments
+Apply migration 0009 to production,To Do,,2026-12-08,backend
+Transfer Vercel and Supabase ownership to club account,To Do,Priya Nair,2026-11-28,ops
+Send Nimbus Labs usage report,To Do,Meera Iyer,2026-12-31,sponsor
+Volunteer check-in training,To Do,Arjun Mehta,2026-12-10,ops
+Renew orionfest.in domain,To Do,,2027-01-02,ops
+Final poster assets,Done,Sneha Patil,2026-08-28,design

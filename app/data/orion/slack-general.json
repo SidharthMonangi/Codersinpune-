@@ -1,0 +1,13 @@
+[
+ {"user_profile":{"real_name":"Dr. Anjali Kulkarni"},"ts":"1787040000","text":"Orion Fest is confirmed for 14 December 2026 in the main auditorium. College approval received."},
+ {"user_profile":{"real_name":"Sneha Patil"},"ts":"1787126400","text":"Posters say Orion Fest is on 15 December. Can someone confirm the date?"},
+ {"user_profile":{"real_name":"Priya Nair"},"ts":"1787644800","text":"Registration cap is 800 people because of auditorium capacity."},
+ {"user_profile":{"real_name":"Meera Iyer"},"ts":"1787731200","text":"The sponsor asked if we can go to 1000 registrations. I told them the cap is 1000."},
+ {"user_profile":{"real_name":"Priya Nair"},"ts":"1788681600","text":"We chose QR code check-in for the fest entry."},
+ {"user_profile":{"real_name":"Rohan Desai"},"ts":"1790236800","text":"Hi! I'm new, what should I pick up first?"},
+ {"user_profile":{"real_name":"Arjun Mehta"},"ts":"1790240400","text":"Welcome Rohan! Issue #130, the event card layout bug on mobile, is a good first issue. I can mentor you."},
+ {"user_profile":{"real_name":"Priya Nair"},"ts":"1790841600","text":"Volunteers will get read-only access to the admin panel so they can see registrations but not edit payments."},
+ {"user_profile":{"real_name":"Dr. Anjali Kulkarni"},"ts":"1793433600","text":"Code freeze for the Orion app is 12 December, two days before the fest. No deploys after that without my approval."},
+ {"user_profile":{"real_name":"Priya Nair"},"ts":"1793952000","text":"I graduate this month. My last day with the club is 30 November. Arjun will take over as tech lead."},
+ {"user_profile":{"real_name":"Sneha Patil"},"ts":"1794038400","text":"Who has the login for the domain registrar? orionfest.in renews on 2 January 2027."}
+]
