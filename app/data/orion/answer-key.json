@@ -1,0 +1,16 @@
+{
+  "_about": "Ground truth planted in the synthetic Project Orion dataset, used by tests/leakage.test.ts",
+  "confidential": [
+    { "marker": "120000", "what": "sponsorship amount (finance)", "mustNotReach": ["volunteer", "developer", "tech_lead"] },
+    { "marker": "1,20,000", "what": "sponsorship amount in chat (leads)", "mustNotReach": ["volunteer", "developer"] },
+    { "marker": "medical", "what": "member welfare note (restricted)", "mustNotReach": ["volunteer", "developer", "tech_lead", "treasurer"] },
+    { "marker": "Orion#Fest2026", "what": "staging password (redacted everywhere)", "mustNotReach": ["volunteer", "developer", "tech_lead", "treasurer", "faculty"] },
+    { "marker": "98220", "what": "treasurer phone number (redacted everywhere)", "mustNotReach": ["volunteer", "developer", "tech_lead", "treasurer", "faculty"] },
+    { "marker": "personal card", "what": "domain billing detail (leads/finance)", "mustNotReach": ["volunteer"] }
+  ],
+  "secrets": ["Orion#Fest2026", "98220 41376"],
+  "decisions": ["firebase to supabase", "razorpay instead of stripe", "college sso", "qr code check-in", "email-only reminders", "biweekly releases"],
+  "superseded": ["mongodb as the main database", "onesignal for push notifications", "releases are weekly"],
+  "conflicts": [["confirmed for 14 december", "15 december"], ["cap is 800", "cap is 1000"]],
+  "gaps": ["migration 0009", "webhook", "certificate", "razorpay support", "you account for"]
+}

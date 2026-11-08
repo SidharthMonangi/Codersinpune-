@@ -122,7 +122,8 @@ export function extractRules(ws: Workspace, units: EvidenceUnit[]): Claim[] {
       if (!sg.type || seen.has(sg.type)) continue;
       seen.add(sg.type);
       const t = sg.type;
-      const ctx = !first && /^(PR|Issue) #\d+/.test(u.locator) ? `${u.locator}: ` : "";
+      const title = u.text.match(/^(?:PR|Issue) #\d+ \([^)]*\): ([^.]+)\./)?.[1];
+      const ctx = !first && /^(PR|Issue) #\d+/.test(u.locator) ? `${u.locator}${title ? ` (${title})` : ""}: ` : "";
       first = false;
       const text = ctx + firstPersonToName(sg.text, authorName).replace(/^(Heads up|Reminder|Update|Note|Decision):\s*/i, "");
       const people = mentionedPeople(ws.people, sg.raw);
