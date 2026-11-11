@@ -16,7 +16,7 @@ import { assignTrust, detectGaps, extractRules, isHistorical, readiness, resolve
 import { demoBase, demoFile, DEMO_MANIFEST } from "./demo";
 import { suggestSensitivity } from "./redact";
 import { overlap, sha256, tokens, uid } from "./util";
-import { aiAvailable, extractAI, verifyAI } from "./ai";
+import { aiAvailable, aiModel, extractAI, verifyAI } from "./ai";
 
 export function log(ws: Workspace, actor: string, action: string, detail = "") {
   ws.audit.unshift({ at: new Date().toISOString(), actor, action, detail });
@@ -92,7 +92,7 @@ export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?:
   }
   ws.claims = [...claims, ...keepHuman];
   ws.gaps = detectGaps(ws);
-  ws.engine = { mode, model: mode === "ai" ? process.env.GEMINI_MODEL || "gemini-2.5-flash" : undefined, lastRunAt: new Date().toISOString(), note };
+  ws.engine = { mode, model: mode === "ai" ? aiModel() : undefined, lastRunAt: new Date().toISOString(), note };
   log(
     ws,
     opts.actor ?? "Baton",

@@ -7,7 +7,7 @@ import { useWs } from "./ctx";
 import type { Trust } from "@/lib/types";
 
 export function Overview({ steps }: { steps: { done: boolean; label: string; tab: string }[] }) {
-  const { ws, go, ai } = useWs();
+  const { ws, go, ai, act, busy } = useWs();
   const byTrust = (t: Trust) => ws.claims.filter((c) => c.trust === t && !c.supersededBy).length;
   const open = ws.gaps.filter((g) => g.status === "open").length;
   const active = ws.claims.filter((c) => !c.supersededBy).length;
@@ -76,6 +76,21 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
             {!ai ? " · AI engine not configured on this server" : ""}
             {ws.engine.note ? <div className="text-amberd">{ws.engine.note}</div> : null}
           </div>
+          {ai ? (
+            <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-[#cdbf9f] bg-paper/50 px-4 py-3">
+              <div className="min-w-0 flex-1 text-sm">
+                <b>{ws.engine.mode === "ai" ? "AI engine active." : "Compare with the AI engine."}</b>{" "}
+                <span className="text-ink2">
+                  {ws.engine.mode === "ai"
+                    ? "Claims were extracted by Gemini and checked link-by-link by a separate Gemini verifier. Same trust rules, same permission checks."
+                    : "Re-extract every claim with Gemini and verify each evidence link independently (about 20–40 s on the free tier). Review decisions are kept."}
+                </span>
+              </div>
+              <Btn kind={ws.engine.mode === "ai" ? "default" : "amber"} disabled={!!busy} onClick={() => act("run", { useAI: ws.engine.mode !== "ai" }, ws.engine.mode === "ai" ? "Re-running with the rule engine…" : "Gemini is reading the sources…")}>
+                {ws.engine.mode === "ai" ? "Switch back to rule engine" : "✦ Re-run with Gemini AI"}
+              </Btn>
+            </div>
+          ) : null}
         </Card>
 
         <Card>
