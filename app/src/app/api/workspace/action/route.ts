@@ -9,7 +9,7 @@ import { secret, uid } from "@/lib/util";
 import type { Sensitivity, Workspace } from "@/lib/types";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const MAX_FILE = 400_000;
 

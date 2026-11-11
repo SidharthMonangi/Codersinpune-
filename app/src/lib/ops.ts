@@ -55,9 +55,12 @@ export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?:
   let claims: Claim[];
   let mode: "ai" | "rules" = "rules";
   let note: string | undefined;
+  const t0 = Date.now();
+  let tExtract = 0;
   if (opts.useAI && aiAvailable()) {
     try {
       claims = await extractAI(ws, units);
+      tExtract = Date.now() - t0;
       mode = "ai";
     } catch (e) {
       note = `AI extraction failed (${(e as Error).message}); fell back to rule-based extraction.`;
@@ -92,7 +95,7 @@ export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?:
   }
   ws.claims = [...claims, ...keepHuman];
   ws.gaps = detectGaps(ws);
-  ws.engine = { mode, model: mode === "ai" ? aiModel() : undefined, lastRunAt: new Date().toISOString(), note };
+  ws.engine = { mode, model: mode === "ai" ? aiModel() : undefined, lastRunAt: new Date().toISOString(), note, ms: Date.now() - t0, msExtract: tExtract || undefined };
   log(
     ws,
     opts.actor ?? "Baton",

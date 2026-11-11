@@ -72,7 +72,7 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
           </div>
           <div className="mt-3 text-xs text-mute">
             Engine: {ws.engine.mode === "ai" ? `AI extraction (${ws.engine.model}) + independent AI verifier` : "rule-based extraction + lexical verifier (deterministic, no AI quota needed)"}
-            {ws.engine.lastRunAt ? ` · last run ${fmtDateTime(ws.engine.lastRunAt)}` : ""}
+            {ws.engine.lastRunAt ? ` · last run ${fmtDateTime(ws.engine.lastRunAt)}` : ""}{ws.engine.ms ? ` · took ${(ws.engine.ms / 1000).toFixed(1)} s` : ""}
             {!ai ? " · AI engine not configured on this server" : ""}
             {ws.engine.note ? <div className="text-amberd">{ws.engine.note}</div> : null}
           </div>

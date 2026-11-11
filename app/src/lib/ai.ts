@@ -6,7 +6,8 @@ import { classifyArea } from "./areas";
 // Gemini (free tier) via REST. Source text is passed as quoted, untrusted DATA inside a JSON payload;
 // the model has no tools and can only return claims matching the schema, so injected instructions cannot widen access.
 
-const MODELS = () => [...new Set([process.env.GEMINI_MODEL, "gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"].filter(Boolean) as string[])];
+const MODELS = () => [...new Set([process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"].filter(Boolean) as string[])];
+const noThinkingCtl = new Set<string>();
 export const aiAvailable = () => !!process.env.GEMINI_API_KEY;
 let workingModel: string | null = null;
 export const aiModel = () => workingModel ?? MODELS()[0];
@@ -26,8 +27,11 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
   const models = workingModel ? [workingModel] : MODELS();
   let lastErr = "no model available";
   for (const model of models) {
-    let r = await call(model, system, user, schema, true);
-    if (r.status === 400) r = await call(model, system, user, schema, false); // model without thinking controls
+    let r = await call(model, system, user, schema, !noThinkingCtl.has(model));
+    if (r.status === 400 && !noThinkingCtl.has(model)) {
+      noThinkingCtl.add(model); // remember: this model rejects thinking controls
+      r = await call(model, system, user, schema, false);
+    }
     if (r.status === 404) { lastErr = `model ${model} not found`; continue; }
     if (r.status === 429) throw new Error("Gemini free-tier rate limit reached");
     if (!r.ok) { lastErr = `Gemini returned ${r.status}`; continue; }
@@ -83,13 +87,13 @@ export async function extractAI(ws: Workspace, units: EvidenceUnit[]): Promise<C
   const out: Claim[] = [];
   const byId = new Map(units.map((u) => [u.id, u]));
   const sorted = [...units].sort((a, b) => +new Date(a.ts) - +new Date(b.ts));
-  const BATCH = 40;
+  const BATCH = 25;
   const batches: EvidenceUnit[][] = [];
   for (let i = 0; i < sorted.length; i += BATCH) batches.push(sorted.slice(i, i + BATCH));
-  // first batch alone (discovers a working model), then the rest in parallel to stay inside serverless time limits
+  // all batches in parallel to stay inside serverless time limits
   const run = (b: EvidenceUnit[]) =>
     gemini(EXTRACT_SYSTEM, { project: ws.project.name, evidence: b.map((u) => ({ id: u.id, author: personName(ws, u.author) || u.author, date: u.ts.slice(0, 10), where: u.locator, text: u.text })) }, EXTRACT_SCHEMA);
-  const results = [await run(batches[0]), ...(await Promise.all(batches.slice(1).map(run)))];
+  const results = await Promise.all(batches.map(run));
   for (const res of results) {
     for (const c of res.claims ?? []) {
       const ids: string[] = (c.evidence_ids ?? []).filter((id: string) => byId.has(id));
@@ -146,7 +150,7 @@ export async function verifyAI(claims: Claim[], ev: Map<string, EvidenceUnit>): 
   // Each (claim, evidence) link is judged independently, which is what lets us re-verify per reader later.
   const pairs: { c: Claim; i: number }[] = [];
   for (const c of claims) c.evidence.forEach((_, i) => pairs.push({ c, i }));
-  const BATCH = 60;
+  const BATCH = 35;
   const chunks: { c: Claim; i: number }[][] = [];
   for (let k = 0; k < pairs.length; k += BATCH) chunks.push(pairs.slice(k, k + BATCH));
   const results = await Promise.all(
