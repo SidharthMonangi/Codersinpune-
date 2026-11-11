@@ -72,6 +72,7 @@ export interface EvidenceLink {
   relation: "supports" | "contradicts";
   score: number; // verifier score 0..1
   basis?: string; // the statement this evidence was extracted as (for merged/corroborating evidence)
+  aiVerified?: boolean; // score came from the independent AI verifier judging the claim's own wording
 }
 
 export interface Claim {

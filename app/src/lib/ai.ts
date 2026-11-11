@@ -86,7 +86,8 @@ Rules:
 - has_rationale is true only if the cited evidence states WHY a decision was made.
 - owner: full name of the person responsible, only if stated. due: YYYY-MM-DD only if a date is stated.
 - If a later item reverses or contradicts an earlier one, output both claims and list the earlier claim's evidence ids in contradicts_ids of the later claim.
-- Merge repeated reports of the same problem into one blocker citing all of them.`;
+- Merge repeated reports of the same problem into one blocker citing all of them.
+- Be exhaustive: most evidence items that contain project knowledge yield at least one claim. A typical project of ~100 items yields 40-70 claims. Include implicit knowledge (e.g. an issue left open with no assignee is unowned work; a credential or account tied to one person is a risk).`;
 
 const EXTRACT_SCHEMA = {
   type: "OBJECT",
@@ -190,6 +191,7 @@ export async function verifyAI(claims: Claim[], ev: Map<string, EvidenceUnit>): 
       const p = chunk[r.pair];
       if (!p) continue;
       const link = p.c.evidence[p.i];
+      link.aiVerified = true;
       if (r.label === "unrelated") link.score = 0;
       else {
         link.relation = r.label;

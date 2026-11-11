@@ -45,6 +45,25 @@ export function removeSource(ws: Workspace, sourceId: string, actor = "admin") {
   log(ws, actor, "Removed source", s.title);
 }
 
+/** Merge AI claims into rule claims that share a type and an evidence item; keep the rest of both. */
+function mergeHybrid(rules: Claim[], ai: Claim[]): Claim[] {
+  const out = [...rules];
+  for (const a of ai) {
+    const aIds = new Set(a.evidence.map((e) => e.evidenceId));
+    const match = out.find((r) => r.origin === "rules" && r.type === a.type && r.evidence.some((e) => aIds.has(e.evidenceId)));
+    if (match) {
+      for (const e of match.evidence) e.basis ??= match.text; // keep the verbatim statement each link was extracted as
+      for (const e of a.evidence) if (!match.evidence.some((x) => x.evidenceId === e.evidenceId)) match.evidence.push({ ...e });
+      match.text = a.text;
+      match.origin = "ai";
+      match.owner ??= a.owner;
+      match.due ??= a.due;
+      match.rationale = match.rationale || a.rationale;
+    } else out.push(a);
+  }
+  return out;
+}
+
 export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?: string }) {
   const evMap = new Map(ws.evidence.map((u) => [u.id, u]));
   const kinds = new Map(ws.sources.map((s) => [s.id, s.kind]));
@@ -60,7 +79,8 @@ export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?:
   callLog.length = 0;
   if (opts.useAI && aiAvailable()) {
     try {
-      claims = await extractAI(ws, units);
+      // Hybrid: the rule engine guarantees coverage; Gemini adds implicit knowledge and cleaner wording.
+      claims = mergeHybrid(extractRules(ws, units), await extractAI(ws, units));
       tExtract = Date.now() - t0;
       mode = "ai";
     } catch (e) {
@@ -260,18 +280,20 @@ export function visibility(ws: Workspace, c: Claim, role: RoleDef): { visible: b
   const supports = links.filter((l) => l.relation === "supports" && l.score >= 0.5);
   // (a) at least one visible supporting source
   let ok = supports.length > 0;
-  // (b) the claim must still be supported by the visible sources alone (re-verification)
-  if (ok && c.origin === "rules") {
+  // (b) the claim's wording must still be supported by the visible sources alone (re-verification):
+  //     lexically, or by an independent per-link AI verdict on a visible source (pure AI links, score >= 0.7)
+  if (ok) {
     const text = tokens(c.text.replace(/^Recurring \(\d+ reports\): /, ""));
     const best = Math.max(...supports.map((l) => overlap(text, tokens(ev.get(l.evidenceId)!.text))));
-    ok = best >= 0.5;
+    const aiVerified = c.origin === "ai" && supports.some((l) => l.aiVerified && l.score >= 0.7);
+    ok = best >= 0.5 || aiVerified;
   }
   // (c) the claim text itself must be within clearance
   if (ok && suggestSensitivity(c.text, 0) > role.clearance) ok = false;
   let text = c.text;
   // If the representative wording came from a source this reader can't open, re-render the claim
   // from a statement extracted from one of the reader's OWN sources instead (never from hidden ones).
-  if (!ok && c.origin === "rules") {
+  if (!ok && c.origin !== "human") {
     for (const l of supports) {
       const u = ev.get(l.evidenceId)!;
       const basis = l.basis ?? c.text;
