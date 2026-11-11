@@ -27,17 +27,31 @@ async function call(model: string, system: string, user: unknown, schema: object
 
 async function gemini(system: string, user: unknown, schema: object): Promise<any> {
   const models = workingModel ? [workingModel] : MODELS();
-  let lastErr = "no model available";
+  const errs: string[] = [];
   for (const model of models) {
     const t = Date.now();
-    let r = await call(model, system, user, schema, !noThinkingCtl.has(model));
-    if (r.status === 400 && !noThinkingCtl.has(model)) {
-      noThinkingCtl.add(model); // remember: this model rejects thinking controls
-      r = await call(model, system, user, schema, false);
+    let r: Response | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      r = await call(model, system, user, schema, !noThinkingCtl.has(model));
+      if (r.status === 400 && !noThinkingCtl.has(model)) {
+        const body = await r.text();
+        errs.push(`${model}: 400 with thinking config (${body.slice(0, 80).replace(/\s+/g, " ")})`);
+        noThinkingCtl.add(model); // remember: this model rejects this thinking control
+        r = await call(model, system, user, schema, false);
+      }
+      if (r.status === 503 || r.status === 500 || r.status === 429) {
+        errs.push(`${model}: ${r.status}`);
+        await new Promise((res) => setTimeout(res, 1500 * (attempt + 1)));
+        continue;
+      }
+      break;
     }
-    if (r.status === 404) { lastErr = `model ${model} not found`; continue; }
+    if (!r) continue;
     if (r.status === 429) throw new Error("Gemini free-tier rate limit reached");
-    if (!r.ok) { lastErr = `Gemini returned ${r.status}`; continue; }
+    if (!r.ok) {
+      errs.push(`${model}: ${r.status}`);
+      continue;
+    }
     workingModel = model;
     callLog.push(`${model}${noThinkingCtl.has(model) ? "" : "/min-think"} ${((Date.now() - t) / 1000).toFixed(1)}s`);
     const j = await r.json();
@@ -48,7 +62,7 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
       throw new Error("Gemini returned malformed JSON");
     }
   }
-  throw new Error(lastErr);
+  throw new Error(errs.slice(-4).join("; ") || "no model available");
 }
 
 const TYPES: ClaimType[] = ["decision", "ownership", "open_question", "risk", "dependency", "blocker", "next_action", "contact"];
