@@ -71,7 +71,7 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
             ))}
           </div>
           <div className="mt-3 text-xs text-mute">
-            Engine: {ws.engine.mode === "ai" ? `AI extraction (${ws.engine.model}) + independent AI verifier` : "rule-based extraction + lexical verifier (deterministic, no AI quota needed)"}
+            Engine: {ws.engine.mode === "ai" ? `hybrid: rule engine + Gemini (${ws.engine.model}) extraction, independent per-link verifier` : "rule-based extraction + lexical verifier (deterministic, no AI quota needed)"}
             {ws.engine.lastRunAt ? ` · last run ${fmtDateTime(ws.engine.lastRunAt)}` : ""}{ws.engine.ms ? ` · took ${(ws.engine.ms / 1000).toFixed(1)} s` : ""}
             {!ai ? " · AI engine not configured on this server" : ""}
             {ws.engine.note ? <div className="text-amberd">{ws.engine.note}</div> : null}
@@ -82,8 +82,8 @@ export function Overview({ steps }: { steps: { done: boolean; label: string; tab
                 <b>{ws.engine.mode === "ai" ? "AI engine active." : "Compare with the AI engine."}</b>{" "}
                 <span className="text-ink2">
                   {ws.engine.mode === "ai"
-                    ? "Claims were extracted by Gemini and checked link-by-link by a separate Gemini verifier. Same trust rules, same permission checks."
-                    : "Re-extract every claim with Gemini and verify each evidence link independently (about 20–40 s on the free tier). Review decisions are kept."}
+                    ? `The rule engine guaranteed coverage; Gemini added implicit knowledge and rewrote ${ws.claims.filter((c) => c.origin === "ai").length} claims in plain language, and a separate verifier call checked every evidence link. Same trust rules, same permission checks.`
+                    : "Add Gemini to the rule engine: it finds implicit knowledge, rewrites claims in plain language, and an independent verifier call checks every evidence link (about 20–60 s on the free tier). If the free quota runs out, Baton falls back to rules and says so."}
                 </span>
               </div>
               <Btn kind={ws.engine.mode === "ai" ? "default" : "amber"} disabled={!!busy} onClick={() => act("run", { useAI: ws.engine.mode !== "ai" }, ws.engine.mode === "ai" ? "Re-running with the rule engine…" : "Gemini is reading the sources…")}>

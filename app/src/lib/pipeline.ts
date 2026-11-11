@@ -312,8 +312,11 @@ export function assignTrust(claims: Claim[], ev: Map<string, EvidenceUnit>, kind
     const authoritative = supports.some((e) => AUTHORITATIVE.has(kinds.get(ev.get(e.evidenceId)?.sourceId ?? "") ?? ""));
     const explicit = /\b(decision:|decided|confirmed|plan is final)\b/i.test(c.text);
     c.confidence = supports.length ? Math.min(0.99, Math.max(...supports.map((s) => s.score)) * (0.7 + 0.1 * Math.min(3, sources.size))) : 0.1;
+    // contradicting evidence that belongs to a claim this one superseded is already resolved
+    const resolvedEv = new Set(claims.filter((o) => o.supersededBy === c.id).flatMap((o) => o.evidence.map((e) => e.evidenceId)));
+    const openContra = c.evidence.some((e) => e.relation === "contradicts" && !resolvedEv.has(e.evidenceId));
     if (!supports.length) c.trust = "unsupported";
-    else if (unresolved.length || c.evidence.some((e) => e.relation === "contradicts")) c.trust = "conflicting";
+    else if (unresolved.length || openContra) c.trust = "conflicting";
     else if (sources.size >= 2 || authoritative || explicit) c.trust = "verified";
     else c.trust = "inferred";
     c.confidence = Math.round(c.confidence * 100) / 100;
