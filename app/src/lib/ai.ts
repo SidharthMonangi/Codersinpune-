@@ -107,7 +107,7 @@ export async function extractAI(ws: Workspace, units: EvidenceUnit[]): Promise<C
   const out: Claim[] = [];
   const byId = new Map(units.map((u) => [u.id, u]));
   const sorted = [...units].sort((a, b) => +new Date(a.ts) - +new Date(b.ts));
-  const BATCH = 25;
+  const BATCH = 160; // one request for a typical project: the free tier allows only a few requests per minute
   const batches: EvidenceUnit[][] = [];
   for (let i = 0; i < sorted.length; i += BATCH) batches.push(sorted.slice(i, i + BATCH));
   // all batches in parallel to stay inside serverless time limits
@@ -170,7 +170,7 @@ export async function verifyAI(claims: Claim[], ev: Map<string, EvidenceUnit>): 
   // Each (claim, evidence) link is judged independently, which is what lets us re-verify per reader later.
   const pairs: { c: Claim; i: number }[] = [];
   for (const c of claims) c.evidence.forEach((_, i) => pairs.push({ c, i }));
-  const BATCH = 35;
+  const BATCH = 220;
   const chunks: { c: Claim; i: number }[][] = [];
   for (let k = 0; k < pairs.length; k += BATCH) chunks.push(pairs.slice(k, k + BATCH));
   const results = await Promise.all(
