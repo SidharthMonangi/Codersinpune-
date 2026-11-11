@@ -20,13 +20,13 @@
 11. 10 automated tests (leakage, redaction, conflicts, gaps, AI guard-rails) running in GitHub Actions CI.
 
 ## Technology and implementation details
-Next.js 15 + TypeScript (UI and API in one app), Tailwind CSS 4, Supabase Postgres (Row-Level Security with no policies; access only through secret-checked database functions), Vercel (Mumbai region), GitHub REST API connector, and an optional Google Gemini (gemini-2.5-flash) extraction and verification engine with a rule-based fallback.
+Next.js 15 + TypeScript (UI and API in one app), Tailwind CSS 4, Supabase Postgres (Row-Level Security with no policies; access only through secret-checked database functions), Vercel (Mumbai region), GitHub REST API connector, and a hybrid AI engine: the rule engine for coverage, plus Google Gemini (free tier) for implicit knowledge and wording, plus an independent Gemini verifier for every evidence link. It is live, uses 2 requests and about 20 s per run, and falls back to rules when the quota runs out.
 
 Each recipient's handover is compiled on the server from the approved version. A claim is shown only if the reader can open at least one of its sources, those sources alone still support it, and its sensitivity is within the reader's clearance. Otherwise it is sealed. Demo data is a synthetic project with a planted answer key: 6/6 decisions, 3/3 reversals and 2/2 conflicts detected, and 0 leaks across 20 permission checks.
 
 ## Changes made to the original plan
 - One Next.js app instead of Next.js + FastAPI + Redis: faster for a solo 72-hour build, and one deploy.
-- Gemini free tier (optional) plus a rule engine instead of the Claude API: zero cost, and the app still works without a key or when the quota runs out.
+- A hybrid of the Gemini free tier and a rule engine instead of the Claude API: zero cost, and the app keeps working when the free quota runs out.
 - A regex and entropy redaction gate instead of Microsoft Presidio: no separate Python service needed.
 - No-sign-up workspaces and secure share links instead of OAuth: the Round 2 rules require judges to use the product without signing in. Sign-in moves to Round 3.
 - The team knowledge radar was pulled forward from future scope to match the "capture while work happens" goal.

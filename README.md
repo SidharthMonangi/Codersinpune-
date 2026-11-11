@@ -47,7 +47,7 @@ Sources ─► Parsers (Slack/Discord/GitHub/MD/VTT/CSV) ─► Redaction gate (
 
 ## Tech stack
 
-Next.js 15 (App Router, TypeScript), Tailwind CSS 4, Supabase Postgres (RLS + RPC functions), Google Gemini API (free tier, `gemini-2.5-flash`, optional), Vercel (Mumbai region), Node test runner + tsx, GitHub Actions.
+Next.js 15 (App Router, TypeScript), Tailwind CSS 4, Supabase Postgres (RLS + RPC functions), Google Gemini API (free tier, hybrid with the rule engine: "✦ Re-run with Gemini AI" on the Overview tab), Vercel (Mumbai region), Node test runner + tsx, GitHub Actions.
 
 ## Run locally
 
@@ -59,8 +59,8 @@ npm run dev       # http://localhost:3000
 ```
 
 Optional environment variables:
-- `GEMINI_API_KEY`: enables AI extraction and AI verification. Without it, the rule engine is used and labelled as such.
-- `GEMINI_MODEL`: defaults to `gemini-2.5-flash`.
+- `GEMINI_API_KEY`: enables hybrid AI extraction and AI verification. Without it, the rule engine is used and labelled as such.
+- `GEMINI_MODEL`: optional; defaults to `gemini-flash-latest`, falling back to flash-lite models when rate-limited.
 - `GITHUB_TOKEN`: raises GitHub API rate limits for the repo connector.
 - `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY`: storage. `BATON_STORE=memory` keeps everything in memory for offline development.
 
