@@ -49,7 +49,8 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
     if (!r) continue;
     if (r.status === 429) throw new Error("Gemini free-tier rate limit reached");
     if (!r.ok) {
-      errs.push(`${model}: ${r.status}`);
+      const body = r.status === 404 ? "" : (await r.text()).replace(/\s+/g, " ").slice(0, 160);
+      errs.push(`${model}: ${r.status}${body ? ` ${body}` : ""}`);
       continue;
     }
     workingModel = model;
