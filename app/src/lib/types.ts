@@ -166,7 +166,7 @@ export interface Workspace {
   versions: Version[];
   shares: ShareRef[];
   audit: AuditEvent[];
-  engine: { mode: "ai" | "rules"; model?: string; lastRunAt?: string; note?: string; ms?: number; msExtract?: number };
+  engine: { mode: "ai" | "rules"; model?: string; lastRunAt?: string; note?: string; ms?: number; msExtract?: number; calls?: string[] };
   demo: boolean;
 }
 

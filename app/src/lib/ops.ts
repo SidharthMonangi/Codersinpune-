@@ -16,7 +16,7 @@ import { assignTrust, detectGaps, extractRules, isHistorical, readiness, resolve
 import { demoBase, demoFile, DEMO_MANIFEST } from "./demo";
 import { suggestSensitivity } from "./redact";
 import { overlap, sha256, tokens, uid } from "./util";
-import { aiAvailable, aiModel, extractAI, verifyAI } from "./ai";
+import { aiAvailable, aiModel, callLog, extractAI, verifyAI } from "./ai";
 
 export function log(ws: Workspace, actor: string, action: string, detail = "") {
   ws.audit.unshift({ at: new Date().toISOString(), actor, action, detail });
@@ -57,6 +57,7 @@ export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?:
   let note: string | undefined;
   const t0 = Date.now();
   let tExtract = 0;
+  callLog.length = 0;
   if (opts.useAI && aiAvailable()) {
     try {
       claims = await extractAI(ws, units);
@@ -95,7 +96,7 @@ export async function runPipeline(ws: Workspace, opts: { useAI: boolean; actor?:
   }
   ws.claims = [...claims, ...keepHuman];
   ws.gaps = detectGaps(ws);
-  ws.engine = { mode, model: mode === "ai" ? aiModel() : undefined, lastRunAt: new Date().toISOString(), note, ms: Date.now() - t0, msExtract: tExtract || undefined };
+  ws.engine = { mode, model: mode === "ai" ? aiModel() : undefined, lastRunAt: new Date().toISOString(), note, ms: Date.now() - t0, msExtract: tExtract || undefined, calls: callLog.length ? [...callLog] : undefined };
   log(
     ws,
     opts.actor ?? "Baton",

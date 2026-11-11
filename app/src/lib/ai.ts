@@ -10,16 +10,18 @@ const MODELS = () => [...new Set([process.env.GEMINI_MODEL, "gemini-flash-latest
 const noThinkingCtl = new Set<string>();
 export const aiAvailable = () => !!process.env.GEMINI_API_KEY;
 let workingModel: string | null = null;
+export const callLog: string[] = [];
 export const aiModel = () => workingModel ?? MODELS()[0];
 
 async function call(model: string, system: string, user: unknown, schema: object, thinkingOff: boolean) {
   const generationConfig: Record<string, unknown> = { temperature: 0.1, responseMimeType: "application/json", responseSchema: schema };
-  if (thinkingOff) generationConfig.thinkingConfig = { thinkingBudget: 0 };
+  // Gemini 2.5 uses a token budget; newer models use a thinking level. Extraction needs neither.
+  if (thinkingOff) generationConfig.thinkingConfig = /2\.5|2\.0/.test(model) ? { thinkingBudget: 0 } : { thinkingLevel: "minimal" };
   return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY ?? "" },
     body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: "user", parts: [{ text: JSON.stringify(user) }] }], generationConfig }),
-    signal: AbortSignal.timeout(45000),
+    signal: AbortSignal.timeout(110000),
   });
 }
 
@@ -27,6 +29,7 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
   const models = workingModel ? [workingModel] : MODELS();
   let lastErr = "no model available";
   for (const model of models) {
+    const t = Date.now();
     let r = await call(model, system, user, schema, !noThinkingCtl.has(model));
     if (r.status === 400 && !noThinkingCtl.has(model)) {
       noThinkingCtl.add(model); // remember: this model rejects thinking controls
@@ -36,6 +39,7 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
     if (r.status === 429) throw new Error("Gemini free-tier rate limit reached");
     if (!r.ok) { lastErr = `Gemini returned ${r.status}`; continue; }
     workingModel = model;
+    callLog.push(`${model}${noThinkingCtl.has(model) ? "" : "/min-think"} ${((Date.now() - t) / 1000).toFixed(1)}s`);
     const j = await r.json();
     const text = j.candidates?.[0]?.content?.parts?.map((p: any) => p.text ?? "").join("") ?? "";
     try {
