@@ -16,7 +16,7 @@ export const aiModel = () => workingModel ?? MODELS()[0];
 async function call(model: string, system: string, user: unknown, schema: object, thinkingOff: boolean) {
   const generationConfig: Record<string, unknown> = { temperature: 0.1, responseMimeType: "application/json", responseSchema: schema };
   // Gemini 2.5 uses a token budget; newer models use a thinking level. Extraction needs neither.
-  if (thinkingOff) generationConfig.thinkingConfig = /2\.5|2\.0/.test(model) ? { thinkingBudget: 0 } : { thinkingLevel: "minimal" };
+  if (thinkingOff) generationConfig.thinkingConfig = /2\.5|2\.0/.test(model) ? { thinkingBudget: 0 } : { thinkingLevel: "low" };
   return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY ?? "" },
@@ -32,8 +32,9 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
     const t = Date.now();
     let r: Response | null = null;
     for (let attempt = 0; attempt < 3; attempt++) {
-      r = await call(model, system, user, schema, !noThinkingCtl.has(model));
-      if (r.status === 400 && !noThinkingCtl.has(model)) {
+      const withThinking = !noThinkingCtl.has(model);
+      r = await call(model, system, user, schema, withThinking);
+      if (r.status === 400 && withThinking) {
         const body = await r.text();
         errs.push(`${model}: 400 with thinking config (${body.slice(0, 80).replace(/\s+/g, " ")})`);
         noThinkingCtl.add(model); // remember: this model rejects this thinking control
@@ -54,7 +55,7 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
       continue;
     }
     workingModel = model;
-    callLog.push(`${model}${noThinkingCtl.has(model) ? "" : "/min-think"} ${((Date.now() - t) / 1000).toFixed(1)}s`);
+    callLog.push(`${model}${noThinkingCtl.has(model) ? "" : "/low-think"} ${((Date.now() - t) / 1000).toFixed(1)}s`);
     const j = await r.json();
     const text = j.candidates?.[0]?.content?.parts?.map((p: any) => p.text ?? "").join("") ?? "";
     try {
