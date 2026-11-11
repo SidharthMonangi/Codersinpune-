@@ -6,7 +6,7 @@ import { classifyArea } from "./areas";
 // Gemini (free tier) via REST. Source text is passed as quoted, untrusted DATA inside a JSON payload;
 // the model has no tools and can only return claims matching the schema, so injected instructions cannot widen access.
 
-const MODELS = () => [...new Set([process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-2.5-flash", "gemini-2.0-flash"].filter(Boolean) as string[])];
+const MODELS = () => [...new Set([process.env.GEMINI_MODEL, "gemini-flash-latest", "gemini-flash-lite-latest", "gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash"].filter(Boolean) as string[])];
 const noThinkingCtl = new Set<string>();
 export const aiAvailable = () => !!process.env.GEMINI_API_KEY;
 let workingModel: string | null = null;
@@ -26,7 +26,7 @@ async function call(model: string, system: string, user: unknown, schema: object
 }
 
 async function gemini(system: string, user: unknown, schema: object): Promise<any> {
-  const models = workingModel ? [workingModel] : MODELS();
+  const models = [...new Set([...(workingModel ? [workingModel] : []), ...MODELS()])];
   const errs: string[] = [];
   for (const model of models) {
     const t = Date.now();
@@ -40,15 +40,22 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
         noThinkingCtl.add(model); // remember: this model rejects this thinking control
         r = await call(model, system, user, schema, false);
       }
-      if (r.status === 503 || r.status === 500 || r.status === 429) {
+      if (r.status === 429) {
+        const body = (await r.text()).replace(/\s+/g, " ");
+        const metric = body.match(/quotaMetric"?: ?"([^"]+)"/)?.[1] ?? body.slice(0, 120);
+        errs.push(`${model}: rate limited (${metric.split("/").pop()})`);
+        if (/PerDay/i.test(metric) || attempt === 1) break; // daily cap or still limited: try the next model
+        await new Promise((res) => setTimeout(res, 4000));
+        continue;
+      }
+      if (r.status === 503 || r.status === 500) {
         errs.push(`${model}: ${r.status}`);
         await new Promise((res) => setTimeout(res, 1500 * (attempt + 1)));
         continue;
       }
       break;
     }
-    if (!r) continue;
-    if (r.status === 429) throw new Error("Gemini free-tier rate limit reached");
+    if (!r || r.status === 429) continue;
     if (!r.ok) {
       const body = r.status === 404 ? "" : (await r.text()).replace(/\s+/g, " ").slice(0, 160);
       errs.push(`${model}: ${r.status}${body ? ` ${body}` : ""}`);
@@ -64,7 +71,8 @@ async function gemini(system: string, user: unknown, schema: object): Promise<an
       throw new Error("Gemini returned malformed JSON");
     }
   }
-  throw new Error(errs.slice(-4).join("; ") || "no model available");
+  const limited = errs.some((e) => e.includes("rate limited"));
+  throw new Error((limited ? "Gemini free-tier rate limit reached: " : "") + (errs.slice(-5).join("; ") || "no model available"));
 }
 
 const TYPES: ClaimType[] = ["decision", "ownership", "open_question", "risk", "dependency", "blocker", "next_action", "contact"];
